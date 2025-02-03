@@ -1,0 +1,54 @@
+---
+title: "Progress Memo 1"
+subtitle: |
+  | Final Project 
+  | Data Science 1 with R (STAT 301-2)
+author: "Miracle Ramos"
+pagetitle: "PM1 Miracle Ramos"
+date: today
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    embed-resources: true
+    link-external-newwindow: true
+
+execute:
+  warning: false
+
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[Miracle's GitHub Repo Link](https://github.com/stat301-2-2025-winter/final-project-2-miracleramos2025.git)
+
+:::
+
+
+## Data source
+
+
+## Why this data
+
+
+## Data quality & complexity check
+
+Plots and Table of the datasets:
+
+
+## Potential data issues
+
+
+## Misc
+
+
+
