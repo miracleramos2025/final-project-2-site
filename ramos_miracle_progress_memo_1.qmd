@@ -107,20 +107,18 @@ kable(var_type_summary, caption = "Variable Type Summary")
 
 ## Target variable analysis
 **Target Variable:** <br>
-The primary target variable for this analysis is the `NBA Champion Team`, a categorical variable indicating which team won the NBA championship for a given season. This is a binary classification problem, as only one team can be crowned the champion each year.
+The primary target variable for this analysis is the `NBA Champion Team`, a categorical variable indicating which team won the NBA championship for a given season. Since only one team can win per year, this is a classification problem.
 
-**Distribution Analysis:** <br>
+**Univariate Analysis:** <br>
 To understand the historical trends in championship wins, I analyzed the number of championships won by each team. The distribution shows that certain teams, like the Los Angeles Lakers, Boston Celtics, and Golden State Warriors, have won significantly more championships compared to others. This suggests an imbalanced dataset, where a few dominant teams are overrepresented, while many others have fewer or no championships.
   
 **Symmetry & Skewness:** <br>
 
 
 ![NBA Championships by Active Teams](figures/nba_championships_by_team.png){#fig-nba-champions}
- 
-  - Teams with more championships, the Lakers and Celtics, appear significantly more than other teams.
+
   - The distribution is right-skewed, meaning a small number of teams have won most championships, while many teams have won only once or not at all.
   
-**Exploratory Data Analysis**<br>
   
 ```{r}
 #| label: tbl-season-performance
@@ -128,11 +126,14 @@ To understand the historical trends in championship wins, I analyzed the number 
 #| echo: false
 
 library(readr)
+library(DT)
 
 season_performance <- read_csv("data/season_performance_cleaned.csv")
 
 # display 
-kable(head(season_performance, 10))
+datatable(season_performance, 
+          options = list(pageLength = 10), 
+          caption = "Season Performance")
 ```
 @tbl-season-performance presents a summary of team-level performance metrics for each season, including total points, assists, and rebounds, along with an indicator for whether the team won the NBA championship.
 
@@ -150,6 +151,7 @@ kable(head(season_performance, 10))
 
   - Categorical variables like team names were mapped to abbreviations to ensure consistency across datasets.
   - If performance metrics such as points or rebounds are heavily skewed, a log transformation might help normalize the distribution and improve model performance.
+  - Since championship wins are skewed, I may explore log transformations on relevant numeric predictors like regular season win percentages to reduce bias.
 
 
 ## Misc
