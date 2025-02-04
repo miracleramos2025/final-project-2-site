@@ -1,8 +1,8 @@
-# Load necessary libraries
+# load libraries
 library(tidyverse)
 library(stringr)
 
-# Read in datasets
+# read in datasets
 teams <- read_csv("data/teams_cleaned.csv")  
 games <- read_csv("data/games.csv")
 games_details <- read_csv("data/games_details.csv")
@@ -10,27 +10,27 @@ nba_champions <- read_csv("data/nba_champions_cleaned.csv")
 nba_playoff_stats <- read_csv("data/nba_playoff_stats_cleaned.csv")
 ranking <- read_csv("data/ranking.csv")
 
-# Standardizing column names
+# standardizing column names
 colnames(nba_playoff_stats) <- c("Year", "League", "Series", "Team", "Wins", "Opponent", "Opponent_Wins", "Favorite", "Underdog")
 colnames(nba_champions) <- c("Year", "League", "Champion", "Runner_Up", "Finals_MVP", "Points", "Rebounds", "Assists", "Win_Shares")
 
-# Convert column names to lowercase for consistency
+# convert column names to lowercase for consistency
 colnames(ranking) <- tolower(colnames(ranking))  
 colnames(games) <- tolower(colnames(games))
 colnames(games_details) <- tolower(colnames(games_details))
 
-# Rename for consistency
+# rename for consistency
 games <- games %>% rename(Year = season)
 ranking <- ranking %>% rename(Year = season_id, Team = team)
 
-# ✅ Remove extra ranking numbers from Team and Opponent before applying historical team name fixes
+# rmove extra ranking numbers from Team and Opponent 
 nba_playoff_stats <- nba_playoff_stats %>%
   mutate(
     Team = str_trim(str_squish(str_remove(Team, "\\s*\\(.*\\)"))),
     Opponent = str_trim(str_squish(str_remove(Opponent, "\\s*\\(.*\\)")))
   )
 
-# ✅ Fix Historical Team Names AFTER Parentheses Are Removed
+# fix Historical Team Names *AFTER* Parentheses Are Removed
 team_name_mapping <- c(
   "New Jersey Nets" = "Brooklyn Nets",
   "Seattle SuperSonics" = "Oklahoma City Thunder",
@@ -55,7 +55,7 @@ nba_playoff_stats <- nba_playoff_stats %>%
     Opponent = ifelse(Opponent %in% names(team_name_mapping), team_name_mapping[Opponent], Opponent)
   )
 
-# ✅ Ensure clean team names before using as a lookup table
+# clean team names 
 nba_playoff_stats <- nba_playoff_stats %>%
   mutate(
     Team = str_trim(str_squish(Team)),
@@ -65,7 +65,7 @@ nba_playoff_stats <- nba_playoff_stats %>%
 teams <- teams %>%
   mutate(Team_Name = str_trim(str_squish(Team_Name)))
 
-# ✅ Final Check - Unique Team Names
+# fnal check - unique Team Names
 print("Final Unique Team Names in nba_playoff_stats:")
 print(unique(nba_playoff_stats$Team))
 
@@ -75,7 +75,7 @@ print(unique(nba_playoff_stats$Opponent))
 print("Final Unique Team Names in teams:")
 print(unique(teams$Team_Name))
 
-# ✅ Save Cleaned Datasets Without Join
+# save cleaned datasets
 write_csv(nba_playoff_stats, "data/nba_playoff_stats_cleaned.csv")
 write_csv(nba_champions, "data/nba_champions_cleaned.csv")
 write_csv(ranking, "data/ranking_cleaned.csv")

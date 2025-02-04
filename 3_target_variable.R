@@ -1,10 +1,10 @@
-# Load necessary libraries
+# load libraries 
 library(tidyverse)
 library(knitr)
 library(dplyr)
 library(tibble)
 
-# Read cleaned datasets
+# read cleaned datasets
 nba_champions <- read_csv("data/nba_champions_cleaned.csv") %>%
   mutate(Year = as.numeric(Year))  # Ensure Year is numeric
 
@@ -14,20 +14,20 @@ games_details <- read_csv("data/games_details_cleaned.csv")
 games <- read_csv("data/games_cleaned.csv") %>%
   mutate(Year = as.numeric(Year))  # Ensure Year is numeric
 
-# Load NBA team colors (only active teams)
+# load NBA team colors 
 load("nba_team_colors.RData")
 
-# Filter only champions that are still active NBA teams
+# filter only champions that are still active NBA teams
 active_champions <- nba_champions %>%
   filter(Champion %in% nba_team_colors$full_name) %>%
   count(Champion, sort = TRUE) %>%
   rename(Championships = n)
 
-# Merge with team colors
+# merge with team colors
 active_champions <- active_champions %>%
   left_join(nba_team_colors, by = c("Champion" = "full_name"))
 
-# Plot championship distribution (Active Teams Only)
+# plot championship distribution (Active Teams Only)
 ggplot(active_champions, aes(x = reorder(Champion, -Championships), y = Championships, fill = color)) +
   geom_bar(stat = "identity") +
   scale_fill_identity() +  # Use colors from dataset
@@ -35,14 +35,14 @@ ggplot(active_champions, aes(x = reorder(Champion, -Championships), y = Champion
   labs(title = "NBA Championships by Active Teams", x = "Team", y = "Total Championships") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Save the plot
+# save
 ggsave("figures/nba_championships_by_team.png", width = 8, height = 5)
 
-# Merge games with games_details to add Year
+# merge games with games_details to add Year
 games_details <- games_details %>%
   left_join(games %>% select(game_id, Year) %>% distinct(), by = "game_id")
 
-# Compute team-level averages for season performance
+# compute team-level averages for season performance
 season_performance <- games_details %>%
   group_by(Year, Team = team_abbreviation) %>%
   summarise(
@@ -53,7 +53,7 @@ season_performance <- games_details %>%
   ungroup()
 
 
-# Step 1: Create a Lookup Table for Team Names to Abbreviations
+# create a Lookup Table for Team Names to Abbreviations
 team_name_map <- tibble(
   Full_Team_Name = c("Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets",
                      "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets",
@@ -68,21 +68,21 @@ team_name_map <- tibble(
                    "POR", "SAC", "SAS", "TOR", "UTA", "WAS")
 )
 
-# Step 2: Convert Full Team Names in nba_champions to Abbreviations
+# convert Full Team Names in nba_champions to Abbreviations
 nba_champions <- nba_champions %>%
   left_join(team_name_map, by = c("Champion" = "Full_Team_Name")) %>%
   select(Year, Abbreviation) %>%
   rename(Team = Abbreviation) %>%
   mutate(Is_Champion = 1)  # Explicitly create Is_Champion column
 
-# Step 3: Merge with season_performance & Fix Is_Champion Column
+# merge with season_performance & Fix Is_Champion Column
 season_performance <- season_performance %>%
   left_join(nba_champions %>% select(Year, Team, Is_Champion), 
             by = c("Year", "Team")) %>%
   mutate(Is_Champion = ifelse(is.na(Is_Champion), 0, 1))  # Ensure non-champions get 0
 
-# Save the cleaned dataset
+# save
 write_csv(season_performance, "data/season_performance_cleaned.csv")
 
-# Verify the Fix
-season_performance %>% filter(Year == 2016, Team == "CLE")
+# verify 
+# season_performance %>% filter(Year == 2016, Team == "CLE")

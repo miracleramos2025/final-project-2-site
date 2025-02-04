@@ -1,7 +1,7 @@
-# Load necessary libraries
+# load libraries
 library(tidyverse)
 
-# Read in the selected key datasets
+# read data
 teams <- read_csv("data/teams.csv")
 games <- read_csv("data/games.csv")
 games_details <- read_csv("data/games_details.csv")  # Player-level stats
@@ -9,7 +9,7 @@ nba_champions <- read_csv("data/nba_champions.csv")  # Historical NBA champions
 nba_playoff_stats <- read_csv("data/nba_playoff_stats.csv")  # Playoff performance stats
 ranking <- read_csv("data/ranking.csv")  # Team rankings over different seasons
 
-# Check structure of datasets
+# check structure of datasets
 glimpse(teams)
 glimpse(games)
 glimpse(games_details)
@@ -17,7 +17,7 @@ glimpse(nba_champions)
 glimpse(nba_playoff_stats)
 glimpse(ranking)
 
-# Function to summarize dataset
+# summarize dataset
 data_check <- function(df, df_name) {
   tibble(
     Dataset = df_name,
@@ -36,7 +36,7 @@ var_type <- function(df, df_name) {
   )
 }
 
-# Apply function to all datasets
+# apply function to all datasets
 data_summary <- bind_rows(
   data_check(teams, "Teams"),
   data_check(games, "Games"),
@@ -68,26 +68,23 @@ var_type_summary <- var_type_summary |> rename(
   "Date" = Date_Variables
 )
 
-# Print the table
-print(data_summary)
-print(var_type_summary)
-
-# View in a nicely formatted table if using RMarkdown or Quarto
+# view table
 knitr::kable(data_summary, caption = "Data Quality Check Summary")
 knitr::kable(var_type_summary, caption = "Variable Types Summary")
 
+# save
 save(data_summary, file = "data/data_summary.RData") 
 save(var_type_summary, file = "data/var_type_summary.RData") 
 
-# Load NBA champions and playoff stats datasets
+# load NBA champions and playoff stats datasets
 nba_champions <- read_csv("data/nba_champions.csv", skip = 1)  # skip potential extra headers
 nba_playoff_stats <- read_csv("data/nba_playoff_stats.csv", skip = 1)
 
-# Rename columns for nba_champions
+# rename columns for nba_champions
 colnames(nba_champions) <- c("Year", "Lg", "Champion", "Runner-Up", "Finals MVP", 
                              "NA1", "Points", "Rebounds", "Assists", "Win Shares")
 
-# Rename columns for nba_playoff_stats
+# rename columns for nba_playoff_stats
 colnames(nba_playoff_stats) <- c("Yr", "Lg", "Series", "NA1", "NA2", 
                                  "Team", "W", "NA3", "Team2", "W2", 
                                  "NA4", "Favorite", "Underdog")
@@ -105,7 +102,7 @@ write_csv(nba_champions, "data/nba_champions_cleaned.csv")
 # save the cleaned nba_playoff_stats dataset
 write_csv(nba_playoff_stats, "data/nba_playoff_stats_cleaned.csv")
 
-# Define team colors for only active NBA teams
+# team colors for only active NBA teams
 nba_team_colors <- tibble::tibble(
   full_name = c("Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", 
                 "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", 
@@ -122,10 +119,10 @@ nba_team_colors <- tibble::tibble(
             "#E03A3E", "#5A2D81", "#C4CED4", "#CE1141", "#002B5C", "#002B5C")
 )
 
-# Save the tibble in an RData file
+# save tibble in RData file
 save(nba_team_colors, file = "nba_team_colors.RData")
 
-# Standardizing column names for consistency
+# column names for consistency
 teams <- teams %>%
   rename(
     Team_ID = TEAM_ID,
@@ -135,7 +132,7 @@ teams <- teams %>%
   ) %>%
   mutate(Team_Name = paste(Team_City, Team_Nickname)) # Create full team name
 
-# Save cleaned teams dataset
+# save 
 write_csv(teams, "data/teams_cleaned.csv")
 
 
