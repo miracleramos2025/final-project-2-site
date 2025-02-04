@@ -1,7 +1,5 @@
 ## Final Project Stat 301-2
 
-## NBA Championship Prediction Project
-
 ## Overview
 This project aims to predict the next NBA champion using historical game data, player statistics, and team rankings. The analysis includes data preprocessing, exploratory analysis, and predictive modeling using classification techniques.
 
