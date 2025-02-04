@@ -18,7 +18,7 @@ To run the analysis:
 1. Ensure all datasets are in the `data/` folder.
 2. Run `1_data_exploration.R` to explore and clean the data.
 3. Execute `2_data_preprocessing.R` for feature engineering.
-4. Use `3_target_variable.R` to finalize the modeling dataset.
+4. Use `3_target_variable.R` to view low-level, initial modeling with the target variable (will expand on this in Memo 2)
 
 ## Authors
 Miracle Ramos – Data Science 1 with R (STAT 301-2)
