@@ -42,17 +42,19 @@ citation-location: margin
 **Motivation:** I've been getting into the NBA over the past two years and I want to use predictive models to explore future outcomes. This project is a fun way to combine sports analytics with machine learning, diving into team stats, player performances, and season trends. By analyzing past data, I hope to gain insights into what makes a team champions and see how well predictions match real world results.
 
 ## Data source
-**Primary Dataset:** The dataset used for this project is sourced from Kaggle: [NBA Games Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games?select=teams.csv). It contains historical game results, player statistics, and team rankings.
+**Primary Dataset:** The dataset used for this project is sourced from [Kaggle: NBA Games Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games?select=teams.csv). It contains historical game results, player statistics, and team rankings. Additional information on NBA Playoffs and NBA Champions was retrieved from [Basketball Reference](https://www.basketball-reference.com/playoffs/).
 
 **Datasets Used:**
 
-  1. `games.csv` – Contains details of NBA games, including team matchups, final scores, and outcomes.
-  2. `games_details.csv` – Includes player-level statistics for each game (points, rebounds, assists, etc.).
-  3. `ranking.csv` – Provides team rankings over different seasons.
-  4. `teams.csv` – Contains metadata about NBA teams.
-  5. `nba_champions.csv` – Provides NBA Champions data for the 30 active teams [Basketball-Reference](https://www.basketball-reference.com/playoffs/)
+  1. `teams.csv` – Provides details on NBA Teams (name, nickname, city, headcoach, etc.).
+  2. `games.csv` – Contains details of NBA games, including team matchups, final scores, and outcomes.
+  3. `games_details.csv` – Includes player-level statistics for each game (points, rebounds, assists, etc.).
+  4. `ranking.csv` – Provides team rankings over different seasons.
+  5. `nba_playoff_stats.csv` - Contains data about team performance in the NBA playoffs.
+  6. `nba_champions.csv` – Provides NBA Champions data from 1949 - 2024.
 
 **Description:** 
+These datasets serve as the foundation for analyzing team performance trends and predicting NBA Championship winners based on season statistics.
 
 **Citations:** <br>
 
@@ -83,47 +85,88 @@ kable(var_type_summary, caption = "Variable Type Summary")
 
   - Numerical Variables: Game scores, player statistics, team rankings.
   - Categorical Variables: Team names, player names, win/loss indicators.
-  - Date Variables: 
+  - Date Variables: Game dates.
 
 **Missingness** <br>
 
   - The `Games` and `Teams` datasets have minimal missing data (<1%).
   - `Games Details` has 19.62% missing values, mainly due to missing stats for inactive players.
   - `Ranking` has 7.55% missing values, likely due to gaps in ranking updates or teams that did not make the playoffs.
+  - `NBA Playoff Stats` has 29.56% missing values, this is due to incomplete playoff data for some years.
+  - `NBA Champions` has 13.98% missing values, primarily due to the absence of Finals MVP data for seasons before 1976.
 
 **Data Tidying** <br>
 
   - `Games Details` needs filtering to remove missing values related to inactive players.
   - `Ranking` dataset should be aligned with playoff results for accurate championship predictions.
   - `Games` dataset has some redundant columns that can be removed to simplify modeling.
+  - `NBA Playoff Stats` contains some missing data, but I will focus on the the more recent data post 2010 so that predictions are not affected.
   - Date formats should be standardized across datasets.
   - Team and player names should be checked for consistency across datasets.
 
 
 ## Target variable analysis
 **Target Variable:** <br>
-
-  - The primary target variable will be `NBA Champion Team`
-  - This will be derived this from the `ranking.csv` dataset and final playoff games.
+The primary target variable for this analysis is the `NBA Champion Team`, a categorical variable indicating which team won the NBA championship for a given season. This is a binary classification problem, as only one team can be crowned the champion each year.
 
 **Distribution Analysis:** <br>
-
-  - The target variable is imbalanced because some teams like the Warriors and Lakers have dominated multiple seasons.
-  - I will visualize historical champions and assess team frequency in past seasons.
-
+To understand the historical trends in championship wins, I analyzed the number of championships won by each team. The distribution shows that certain teams, like the Los Angeles Lakers, Boston Celtics, and Golden State Warriors, have won significantly more championships compared to others. This suggests an imbalanced dataset, where a few dominant teams are overrepresented, while many others have fewer or no championships.
+  
 **Symmetry & Skewness:** <br>
 
+
+![NBA Championships by Active Teams](figures/nba_championships_by_team.png){#fig-nba-champions}
+ 
+  - Teams with more championships, the Lakers and Celtics, appear significantly more than other teams.
+  - The distribution is right-skewed, meaning a small number of teams have won most championships, while many teams have won only once or not at all.
+  
+**Exploratory Data Analysis**<br>
+  
+```{r}
+#| label: tbl-season-performance
+#| tbl-cap: "Season Performance"
+#| echo: false
+
+library(readr)
+
+season_performance <- read_csv("data/season_performance_cleaned.csv")
+
+# display 
+kable(head(season_performance, 10))
+```
+@tbl-season-performance presents a summary of team-level performance metrics for each season, including total points, assists, and rebounds, along with an indicator for whether the team won the NBA championship.
+
+  - High-scoring teams do not necessarily win championships. For example, Detroit (DET) had 9590 points, which is relatively high, but they did not win in 2003.
+  - This suggests that other factors beyond total points contribute to winning a championship, such as defense, efficiency, and playoff performance.
 
 
 **Missingness:** <br>
 
   - If any seasons are missing from the `Ranking` dataset, I may need to cross-reference game results to fill in the missing champions.
+  - NBA Playoff Stats had missing data for some seasons prior to the 70's, so the analysis focuses primarily on recent data to maintain data quality.
 
 
-**Transformations Considered:**
+**Transformations Considered:**<br>
+
+  - Categorical variables like team names were mapped to abbreviations to ensure consistency across datasets.
+  - If performance metrics such as points or rebounds are heavily skewed, a log transformation might help normalize the distribution and improve model performance.
 
 
 ## Misc
 
+**Next Steps:**<br>
 
+  - Conduct further feature engineering to incorporate factors like player statistics, advanced metrics, and playoff performance.
+  - Test different classification models, such as logistic regression, decision trees, and random forests, to evaluate accuracy in predicting the next NBA champion.
+
+**Progress Memo 2 Goals:**
+
+  - Expand Feature Engineering
+  - Complete Initial Model Testing
+  - Validate Data Accuracy
+  
+**Final Project Goals:**
+
+  - Make Final Predictions
+  - Interpret Findings & Executive Summary
 

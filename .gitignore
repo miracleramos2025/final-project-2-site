@@ -38,6 +38,13 @@ games.csv
 nba_playoff_stats.csv
 nba_champions.csv
 
+ranking_cleaned.csv
+games_details_cleaned.csv
+games_cleaned.csv
+nba_playoff_stats_cleaned.csv
+nba_champions_cleaned.csv
+
+
 # Ignore temporary files
 *.tmp
 *.log
