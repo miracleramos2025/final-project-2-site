@@ -31,6 +31,17 @@
 *.DS_Store
 **/.DS_Store
 
+# Ignore large raw CSV files
+ranking.csv
+games_details.csv
+games.csv
+nba_playoff_stats.csv
+nba_champions.csv
+
+# Ignore temporary files
+*.tmp
+*.log
+
 # ignore files (likely datasets or graphics) if too large (> 100 MB)
 # specify pathway to dataset data/project_dataset.csv
 # if all datasets are too large then use data/*.csv (only ignores CSVs)
