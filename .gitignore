@@ -43,7 +43,8 @@ games_details_cleaned.csv
 games_cleaned.csv
 nba_playoff_stats_cleaned.csv
 nba_champions_cleaned.csv
-
+AB_NYC_2019.csv
+New_York_City_.png
 
 # Ignore temporary files
 *.tmp
