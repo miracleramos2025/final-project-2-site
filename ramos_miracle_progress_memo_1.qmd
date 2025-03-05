@@ -1,5 +1,5 @@
 ---
-title: "Progress Memo 1"
+title: "Progress Memo 2"
 subtitle: |
   | Final Project 
   | Data Science 1 with R (STAT 301-2)
@@ -35,31 +35,25 @@ citation-location: margin
 
 ## Prediction problem
 
-**Research Objective:** The goal of this project is to develop a predictive model that forecasts the next NBA champion. Specifically, I will predict which team is most likely to win the championship based on historical game data, player statistics, and team rankings.
+**Research Objective:** The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. Specifically, I will predict the price of an Airbnb listing based on various features such as location, property type, number of reviews, availability, and host details.
 
-**Prediction Type:** This is a classification problem, where the target variable will be the `NBA champion team` for a given season. The model will be trained using supervised learning techniques.
+**Prediction Type:** This is a regression problem, where the target variable will be the `price` of an Airbnb listing. The model will be trained using supervised learning techniques.
 
-**Motivation:** I've been getting into the NBA over the past two years and I want to use predictive models to explore future outcomes. This project is a fun way to combine sports analytics with machine learning, diving into team stats, player performances, and season trends. By analyzing past data, I hope to gain insights into what makes a team champions and see how well predictions match real world results.
+**Motivation:** As Airbnb continues to be a dominant platform in the short-term rental market, understanding pricing trends is crucial for both hosts and guests. This project allows me to explore machine learning techniques while analyzing factors that contribute to Airbnb pricing in NYC. By predicting prices accurately, I aim to provide insights into market trends and pricing strategies.
 
 ## Data source
-**Primary Dataset:** The dataset used for this project is sourced from [Kaggle: NBA Games Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games?select=teams.csv). It contains historical game results, player statistics, and team rankings. Additional information on NBA Playoffs and NBA Champions was retrieved from [Basketball Reference](https://www.basketball-reference.com/playoffs/).
+**Primary Dataset:** The dataset used for this project is sourced from [Kaggle: New York City Airbnb Open Data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data?select=AB_NYC_2019.csv). It contains details about Airbnb listings in NYC for the year 2019, including host information, listing details, location, and pricing metrics.
 
 **Datasets Used:**
 
-  1. `teams.csv` – Provides details on NBA Teams (name, nickname, city, headcoach, etc.).
-  2. `games.csv` – Contains details of NBA games, including team matchups, final scores, and outcomes.
-  3. `games_details.csv` – Includes player-level statistics for each game (points, rebounds, assists, etc.).
-  4. `ranking.csv` – Provides team rankings over different seasons.
-  5. `nba_playoff_stats.csv` - Contains data about team performance in the NBA playoffs.
-  6. `nba_champions.csv` – Provides NBA Champions data from 1949 - 2024.
+  1. `AB_NYC_2019.csv` – Contains information on Airbnb listings, including host details, property characteristics, location, number of reviews, and pricing.
 
 **Description:** 
-These datasets serve as the foundation for analyzing team performance trends and predicting NBA Championship winners based on season statistics.
+This dataset provides a comprehensive view of Airbnb activity in NYC, making it suitable for building a model that predicts listing prices based on various factors.
 
 **Citations:** <br>
 
-  - Kaggle: Nathan Lauga, [NBA Games Dataset](https://www.kaggle.com/datasets/nathanlauga/nba-games?select=teams.csv)
-  - Basketball Reference: [NBA Champions](https://www.basketball-reference.com/playoffs/)
+  - Kaggle: Dgomonov, [New York City Airbnb Open Data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data?select=AB_NYC_2019.csv)
 
 
 ## Data quality check
@@ -69,103 +63,68 @@ These datasets serve as the foundation for analyzing team performance trends and
 #| tbl-cap: "Data Quality Check"
 #| echo: false
 
+# load packages
+library(knitr)
 
 # load saved data summary table
-load("data/data_summary.RData")
-load("data/var_type_summary.RData")
+load("data/dataset_summary.rda")
+load("data/var_type_summary.rda")
 
-# 
-library(knitr)
-kable(data_summary, caption = "Data Quality Summary")
+# display
+kable(dataset_summary, caption = "Data Quality Summary")
 kable(var_type_summary, caption = "Variable Type Summary")
+
 ```
 
 
 **Variable Types:** <br>
 
-  - Numerical Variables: Game scores, player statistics, team rankings.
-  - Categorical Variables: Team names, player names, win/loss indicators.
-  - Date Variables: Game dates.
+  - **Numerical Variables:** `id`, `host_id`, `latitude`, `longitude`, `price`, `minimum_nights`, `number_of_reviews`, `reviews_per_month`, `calculated_host_listings_count`, and `availability_365` are all numerical variables in the New York City Airbnb Open Data dataset.
+  - **Categorical Variables:** `name`, `host_name`, `neighborhood_group`, `neighborhood`, and `room_type` are all categorical variables in the New York City Airbnb Open Data dataset.
+  - **Date Variables:** `last_review` is the only date variable in the New York City Airbnb Open Data dataset.
 
 **Missingness** <br>
 
-  - The `Games` and `Teams` datasets have minimal missing data (<1%).
-  - `Games Details` has 19.62% missing values, mainly due to missing stats for inactive players.
-  - `Ranking` has 7.55% missing values, likely due to gaps in ranking updates or teams that did not make the playoffs.
-  - `NBA Playoff Stats` has 29.56% missing values, this is due to incomplete playoff data for some years.
-  - `NBA Champions` has 13.98% missing values, primarily due to the absence of Finals MVP data for seasons before 1976.
+  - The dataset has an overall missingness percentage of **2.57%**.
+  - The `reviews_per_month` column has **10,052** missing values, which corresponds to listings with no reviews.
+  - The `last_review` column also has **10,052** missing values, indicating that these listings have never received a review.
+  - No missing values were found in critical numeric columns like `price`, `minimum_nights`, and `availability_365`.
 
 **Data Tidying** <br>
 
-  - `Games Details` needs filtering to remove missing values related to inactive players.
-  - `Ranking` dataset should be aligned with playoff results for accurate championship predictions.
-  - `Games` dataset has some redundant columns that can be removed to simplify modeling.
-  - `NBA Playoff Stats` contains some missing data, but I will focus on the the more recent data post 2010 so that predictions are not affected.
-  - Date formats should be standardized across datasets.
-  - Team and player names should be checked for consistency across datasets.
+  - Fill missing values in `reviews_per_month` with 0 where no reviews exist.
+  - Convert `last_review` to a standardized date format.
+  - Encode categorical variables like `neighbourhood_group` and `room_type` for modeling.
 
 
 ## Target variable analysis
 **Target Variable:** <br>
-The primary target variable for this analysis is the `NBA Champion Team`, a categorical variable indicating which team won the NBA championship for a given season. Since only one team can win per year, this is a classification problem.
+The primary target variable for this analysis is `price`, a numerical variable representing the nightly cost of an Airbnb listing.
 
 **Univariate Analysis:** <br>
-To understand the historical trends in championship wins, I analyzed the number of championships won by each team. The distribution shows that certain teams, like the Los Angeles Lakers, Boston Celtics, and Golden State Warriors, have won significantly more championships compared to others. This suggests an imbalanced dataset, where a few dominant teams are overrepresented, while many others have fewer or no championships.
+To understand price distributions, I analyzed the range and central tendencies. The distribution shows that most Airbnb prices are concentrated under $200 per night, but there are extreme outliers with very high prices.
   
 **Symmetry & Skewness:** <br>
 
 
-![NBA Championships by Active Teams](figures/nba_championships_by_team.png){#fig-nba-champions}
 
-  - The distribution is right-skewed, meaning a small number of teams have won most championships, while many teams have won only once or not at all.
-  
-  
-```{r}
-#| label: tbl-season-performance
-#| tbl-cap: "Season Performance"
-#| echo: false
-
-library(readr)
-library(DT)
-
-season_performance <- read_csv("data/season_performance_cleaned.csv")
-
-# display 
-datatable(season_performance, 
-          options = list(pageLength = 10), 
-          caption = "Season Performance")
-```
-@tbl-season-performance presents a summary of team-level performance metrics for each season, including total points, assists, and rebounds, along with an indicator for whether the team won the NBA championship.
-
-  - High-scoring teams do not necessarily win championships. For example, Detroit (DET) had 9590 points, which is relatively high, but they did not win in 2003.
-  - This suggests that other factors beyond total points contribute to winning a championship, such as defense, efficiency, and playoff performance.
 
 
 **Missingness:** <br>
 
-  - If any seasons are missing from the `Ranking` dataset, I may need to cross-reference game results to fill in the missing champions.
-  - NBA Playoff Stats had missing data for some seasons prior to the 70's, so the analysis focuses primarily on recent data to maintain data quality.
+
 
 
 **Transformations Considered:**<br>
 
-  - Categorical variables like team names were mapped to abbreviations to ensure consistency across datasets.
-  - If performance metrics such as points or rebounds are heavily skewed, a log transformation might help normalize the distribution and improve model performance.
-  - Since championship wins are skewed, I may explore log transformations on relevant numeric predictors like regular season win percentages to reduce bias.
+
 
 
 ## Misc
 
 **Next Steps:**<br>
 
-  - Conduct further feature engineering to incorporate factors like player statistics, advanced metrics, and playoff performance.
-  - Test different classification models, such as logistic regression, decision trees, and random forests, to evaluate accuracy in predicting the next NBA champion.
 
-**Progress Memo 2 Goals:**
-
-  - Expand Feature Engineering
-  - Complete Initial Model Testing
-  - Validate Data Accuracy
   
 **Final Project Goals:**
 
