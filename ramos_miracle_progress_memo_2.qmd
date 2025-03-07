@@ -330,5 +330,6 @@ kable(model_performance_summary)
 #### Final Project Goals
 
   - Make Final Predictions
-  - Interpret Findings & Complete Executive Summary
+  - Interpret Findings
+  - Complete Executive Summary
 
