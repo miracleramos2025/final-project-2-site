@@ -324,8 +324,8 @@ kable(model_performance_summary)
   - **Train Remaining Models**: Fit Lasso, Random Forest, and Boosted Trees using the same process.
   - **Improve Features**: Test if Recipe 2 (Advanced) boosts model performance.
   - **Tune Elastic Net**: Adjust settings to improve accuracy.
-  **Find Key Factors**: Identify which variables impact pricing the most.
-  **Pick the Best Model**: Compare RMSE values to choose the top performer.
+  - **Find Key Factors**: Identify which variables impact pricing the most.
+  - **Pick the Best Model**: Compare RMSE values to choose the top performer.
 
 #### Final Project Goals
 
