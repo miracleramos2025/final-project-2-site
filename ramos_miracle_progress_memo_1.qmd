@@ -210,9 +210,9 @@ Model performance will be evaluated using **Root Mean Squared Error (RMSE)**, as
 ## Modeling Progress
 
 ### **Baseline Model**
-The null model, which predicts the mean price for all listings, was implemented and serves as a benchmark. 
 
 
+### **Linear **
 
 ## Misc
   
