@@ -34,9 +34,6 @@ The goal of this project is to develop a predictive model that forecasts Airbnb 
 - `.gitignore` – Specifies files to be ignored by Git version control.
 - `.Rhistory` – Stores command history in RStudio.
 
-## Getting Started
-To run the analysis:
-
 ## Authors
 Miracle Ramos – Data Science 1 with R (STAT 301-2)
 
