@@ -32,6 +32,6 @@ save(baseline_fit, file = here("models/baseline_fit.rda"))
 
 # save / write out model performance 
 baseline_performance <- data.frame(Model = "Baseline", RMSE = rmse_baseline$.estimate)
-save(baseline_performance, file = here("results/model_performance.rda"))
+save(baseline_performance, file = here("results/model_performance_baseline.rda"))
 
 
