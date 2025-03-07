@@ -1,8 +1,12 @@
-# Tables
+# Results
 
-This folder contains summary tables generated from the dataset.
+This folder contains results generated from the dataset.
 
 ### Files:
-- `season_performance_table.md` – A Markdown table summarizing season-level team statistics, including total points, assists, rebounds, and championship status.
+- `model_performance_lm.rda` – Saved performance metrics for the Linear Model.
+- `model_performance_en.rda` – Saved performance metrics for the Elastic Net model.
+- `model_performance_baseline.rda` – Saved performance metrics for the Baseline model.
+- `elasticnet_tune.rda` – Tuning results for the Elastic Net model.
+
 
 

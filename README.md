@@ -11,7 +11,6 @@ The goal of this project is to develop a predictive model that forecasts Airbnb 
 - `models/` – Stores trained models and related outputs.
 - `results/` – Contains evaluation metrics and other results.
 - `sandbox.R` – A script for testing and debugging code snippets.
-- `README.md` – Documentation for the project setup and usage.
 - `ramos_miracle_progress_memo_2.qmd` – Progress memo in Quarto format.
 - `ramos_miracle_progress_memo_2.html` – HTML output of the progress memo.
 - `final-project-2-miracleramos2025.Rproj` – R project file.
