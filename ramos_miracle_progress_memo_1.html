@@ -3052,7 +3052,12 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul>
+  <li><a href="#research-objective" id="toc-research-objective" class="nav-link" data-scroll-target="#research-objective">Research Objective</a></li>
+  <li><a href="#prediction-type" id="toc-prediction-type" class="nav-link" data-scroll-target="#prediction-type">Prediction Type</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  </ul></li>
   <li><a href="#data-overview" id="toc-data-overview" class="nav-link" data-scroll-target="#data-overview">Data Overview</a>
   <ul>
   <li><a href="#primary-dataset" id="toc-primary-dataset" class="nav-link" data-scroll-target="#primary-dataset">Primary Dataset</a></li>
@@ -3144,9 +3149,18 @@ Github Repo Link
 </div>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p><strong>Research Objective:</strong> The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. Specifically, I will predict the price of an Airbnb listing based on various features such as location, property type, number of reviews, availability, and host details.</p>
-<p><strong>Prediction Type:</strong> This is a regression problem, where the target variable will be the <code>price</code> of an Airbnb listing. The model will be trained using supervised learning techniques.</p>
-<p><strong>Motivation:</strong> As Airbnb continues to be a dominant platform in the short-term rental market, understanding pricing trends is crucial for both hosts and guests. This project allows me to explore machine learning techniques while analyzing factors that contribute to Airbnb pricing in NYC. By predicting prices accurately, I aim to provide insights into market trends and pricing strategies.</p>
+<section id="research-objective" class="level4">
+<h4 class="anchored" data-anchor-id="research-objective">Research Objective</h4>
+<p>The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. Specifically, I will predict the price of an Airbnb listing based on various features such as location, property type, number of reviews, availability, and host details.</p>
+</section>
+<section id="prediction-type" class="level4">
+<h4 class="anchored" data-anchor-id="prediction-type">Prediction Type</h4>
+<p>This is a regression problem, where the target variable will be the <code>price</code> of an Airbnb listing. The model will be trained using supervised learning techniques.</p>
+</section>
+<section id="motivation" class="level4">
+<h4 class="anchored" data-anchor-id="motivation">Motivation</h4>
+<p>As Airbnb continues to be a dominant platform in the short-term rental market, understanding pricing trends is crucial for both hosts and guests. This project allows me to explore machine learning techniques while analyzing factors that contribute to Airbnb pricing in NYC. By predicting prices accurately, I aim to provide insights into market trends and pricing strategies.</p>
+</section>
 </section>
 <section id="data-overview" class="level2">
 <h2 class="anchored" data-anchor-id="data-overview">Data Overview</h2>
@@ -3392,7 +3406,7 @@ Figure 2: Log10 Transforation on Distribution of Prices
 </section>
 <section id="assessment-metric" class="level4">
 <h4 class="anchored" data-anchor-id="assessment-metric">Assessment Metric</h4>
-<p>Model performance will be evaluated using <strong>Root Mean Squared Error (RMSE)</strong> because it emphasizes large errors and aligns with our goal of accurate price prediction.</p>
+<p>Model performance will be evaluated using <strong>Root Mean Squared Error (RMSE)</strong> because it emphasizes large errors and aligns with the goal of predicting prices accurately.</p>
 </section>
 </section>
 <section id="modeling-progress" class="level2">
@@ -3543,7 +3557,7 @@ Table 7: Model Performance Summary
 <section id="potential-challenges" class="level4">
 <h4 class="anchored" data-anchor-id="potential-challenges">Potential Challenges</h4>
 <ul>
-<li><strong>Handling Outliers</strong>: Extreme Airbnb prices, $10,000 listings, may affect performance. I may need to consider strong modeling techniques.</li>
+<li><strong>Handling Outliers</strong>: Extreme Airbnb prices, $10,000 listings, may affect performance. Alternative modeling strategies may help manage extreme listings.</li>
 <li><strong>Time Concerns</strong>: Some models like the tree-based methods may take longer to tune.</li>
 </ul>
 </section>

@@ -35,11 +35,14 @@ citation-location: margin
 
 ## Introduction
 
-**Research Objective:** The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. Specifically, I will predict the price of an Airbnb listing based on various features such as location, property type, number of reviews, availability, and host details.
+#### Research Objective
+The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. Specifically, I will predict the price of an Airbnb listing based on various features such as location, property type, number of reviews, availability, and host details.
 
-**Prediction Type:** This is a regression problem, where the target variable will be the `price` of an Airbnb listing. The model will be trained using supervised learning techniques.
+#### Prediction Type
+This is a regression problem, where the target variable will be the `price` of an Airbnb listing. The model will be trained using supervised learning techniques.
 
-**Motivation:** As Airbnb continues to be a dominant platform in the short-term rental market, understanding pricing trends is crucial for both hosts and guests. This project allows me to explore machine learning techniques while analyzing factors that contribute to Airbnb pricing in NYC. By predicting prices accurately, I aim to provide insights into market trends and pricing strategies.
+#### Motivation
+As Airbnb continues to be a dominant platform in the short-term rental market, understanding pricing trends is crucial for both hosts and guests. This project allows me to explore machine learning techniques while analyzing factors that contribute to Airbnb pricing in NYC. By predicting prices accurately, I aim to provide insights into market trends and pricing strategies.
 
 ## Data Overview
 
@@ -208,7 +211,7 @@ To predict Airbnb listing prices in NYC, I will use six models:
   - **Recipe 2 (Advanced)** (`3_recipe2_advanced.R`): Incorporates additional transformations, such as non-linear feature engineering and refined categorical encoding.
   
 #### Assessment Metric
-Model performance will be evaluated using **Root Mean Squared Error (RMSE)** because it emphasizes large errors and aligns with our goal of accurate price prediction.
+Model performance will be evaluated using **Root Mean Squared Error (RMSE)** because it emphasizes large errors and aligns with the goal of predicting prices accurately.
 
 
 ## Modeling Progress
@@ -312,7 +315,7 @@ kable(model_performance_summary)
 
 
 #### Potential Challenges
-  - **Handling Outliers**: Extreme Airbnb prices, $10,000 listings, may affect performance. I may need to consider strong modeling techniques.
+  - **Handling Outliers**: Extreme Airbnb prices, $10,000 listings, may affect performance. Alternative modeling strategies may help manage extreme listings.
   - **Time Concerns**: Some models like the tree-based methods may take longer to tune.
   
 
