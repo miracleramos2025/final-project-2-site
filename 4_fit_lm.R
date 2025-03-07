@@ -11,7 +11,7 @@ library(here)
 load(here("data/airbnb_train.rda"))
 load(here("data/airbnb_test.rda"))
 
-# define basic recipe 1 (unprepped)
+# define basic recipe 1 
 recipe1_basic <- recipe(price ~ ., data = airbnb_train) |>
   step_rm(name, host_name) |>  
   step_other(all_nominal(), -all_outcomes(), threshold = 0.01) |>  
@@ -28,7 +28,7 @@ lm_model <- linear_reg() |>
 
 # create workflow
 lm_wflow <- workflow() |>
-  add_recipe(recipe1_basic) |>  # use unprepped recipe
+  add_recipe(recipe1_basic) |>  
   add_model(lm_model)
 
 # fit model

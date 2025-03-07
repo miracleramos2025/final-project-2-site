@@ -14,7 +14,7 @@ load(here("data/airbnb_test.rda"))
 # load tuning results
 load(here("results/elasticnet_tune.rda"))
 
-# define basic recipe 1 (unprepped)
+# define basic recipe 1
 recipe1_basic <- recipe(price ~ ., data = airbnb_train) |>
   step_rm(name, host_name, last_review) |>  
   step_other(all_nominal(), -all_outcomes(), threshold = 0.01) |>  
