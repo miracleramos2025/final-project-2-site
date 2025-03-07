@@ -34,6 +34,9 @@ var_types <- airbnb_data %>%
   summarise_all(class) %>% 
   pivot_longer(everything(), names_to = "Variable", values_to = "Type")
 
+# rename cols
+var_types$Type <- ifelse(var_types$Type == "character", "Categorical", var_types$Type)
+
 # variable type names capitalized
 var_types$Type <- str_to_title(var_types$Type)
 

@@ -41,7 +41,9 @@ citation-location: margin
 
 **Motivation:** As Airbnb continues to be a dominant platform in the short-term rental market, understanding pricing trends is crucial for both hosts and guests. This project allows me to explore machine learning techniques while analyzing factors that contribute to Airbnb pricing in NYC. By predicting prices accurately, I aim to provide insights into market trends and pricing strategies.
 
-## Data source
+## Data Overview
+
+#### Data source
 **Primary Dataset:** The dataset used for this project is sourced from [Kaggle: New York City Airbnb Open Data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data?select=AB_NYC_2019.csv). It contains details about Airbnb listings in NYC for the year 2019, including host information, listing details, location, and pricing metrics.
 
 **Datasets Used:**
@@ -56,7 +58,7 @@ This dataset provides a comprehensive view of Airbnb activity in NYC, making it 
   - Kaggle: Dgomonov, [New York City Airbnb Open Data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data?select=AB_NYC_2019.csv)
 
 
-## Data quality check
+#### Data Quality Check
 
 ```{r}
 #| label: tbl-data-quality-check
@@ -79,9 +81,9 @@ kable(var_type_summary, caption = "Variable Type Summary")
 
 **Variable Types:** <br>
 
-  - **Numerical Variables:** `id`, `host_id`, `latitude`, `longitude`, `price`, `minimum_nights`, `number_of_reviews`, `reviews_per_month`, `calculated_host_listings_count`, and `availability_365` are all numerical variables in the New York City Airbnb Open Data dataset.
-  - **Categorical Variables:** `name`, `host_name`, `neighborhood_group`, `neighborhood`, and `room_type` are all categorical variables in the New York City Airbnb Open Data dataset.
+  - **Categorical Variables:** There are 5 categorical variables, `name`, `host_name`, `neighborhood_group`, `neighborhood`, and `room_type` in the New York City Airbnb Open Data dataset.
   - **Date Variables:** `last_review` is the only date variable in the New York City Airbnb Open Data dataset.
+  - **Numerical Variables:** There are 10 numerical variables, `id`, `host_id`, `latitude`, `longitude`, `price`, `minimum_nights`, `number_of_reviews`, `reviews_per_month`, `calculated_host_listings_count`, and `availability_365` in the New York City Airbnb Open Data dataset.
 
 **Missingness** <br>
 
@@ -99,32 +101,120 @@ kable(var_type_summary, caption = "Variable Type Summary")
 
 ## Target variable analysis
 **Target Variable:** <br>
-The primary target variable for this analysis is `price`, a numerical variable representing the nightly cost of an Airbnb listing.
+The primary target variable for this analysis is `price`, a numerical variable representing the nightly cost of an Airbnb listing. Understanding price variations is important for both hosts and guests because it reflects market trends, demand, and listing characteristics. Predicting price based on key features such as location, property type, and availability will help identify factors that influence Airbnb rental pricing in New York City.
 
 **Univariate Analysis:** <br>
-To understand price distributions, I analyzed the range and central tendencies. The distribution shows that most Airbnb prices are concentrated under $200 per night, but there are extreme outliers with very high prices.
+```{r}
+#| label: tbl-price-summary
+#| tbl-cap: "Price Summary"
+#| echo: false
+
+# Load required packages
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(readr)
+
+# Load dataset
+airbnb_data <- read_csv("data/AB_NYC_2019.csv")
+
+# Summarize price data
+price_summary <- airbnb_data %>% summarize(
+  mean_price = mean(price, na.rm = TRUE),
+  median_price = median(price, na.rm = TRUE),
+  max_price = max(price, na.rm = TRUE),
+  min_price = min(price, na.rm = TRUE),
+  std_dev = sd(price, na.rm = TRUE)
+)
+
+# Display summary table
+kable(price_summary)
+```
+The **average Airbnb price in NYC is $152.72** but the median is $106, this shows that a few expensive listings raise the average. Prices range from $0 (possibly promotions or errors) to $10,000, with a high standard deviation of $240.15. This indicates large price differences across listings.
   
 **Symmetry & Skewness:** <br>
+```{r}
+#| label: fig-price-dist
+#| fig-cap: "Distribution of Airbnb Prices"
+#| echo: false
 
+# Plot price distribution
+ggplot(airbnb_data, aes(x = price)) +
+  geom_density(fill = "slateblue1", alpha = 0.5) +
+  xlim(0, 1000) + 
+  labs(title = "Density Plot of Airbnb Prices in NYC", x = "Price ($)", y = "Density")
+
+```
+
+The distribution is highly **right-skewed**, with a small number of extremely high priced listings. Most listings fall under $500 per night but outliers significantly increase the maximum price.
 
 
 
 
 **Missingness:** <br>
+```{r}
+#| label: tbl-price-missing
+#| tbl-cap: "Missing Values in Price"
+#| echo: false
 
+missing_price <- sum(is.na(airbnb_data$price))
+kable(data.frame(Variable = "Price", Missing_Values = missing_price))
+```
 
+There are **no missing values** in the `price` variable, all listings have a recorded price. Since the target variable is complete, this will allow for more accurate modeling and analysis.
 
 
 **Transformations Considered:**<br>
 
+```{r}
+#| label: fig-log-price-dist
+#| fig-cap: "Log10 Transforation on Distribution of Prices"
+#| echo: false
+
+# apply log10 transformation
+airbnb_data <- airbnb_data |>
+  mutate(log_price = log10(price + 1))
+
+# Plot transformed price distribution
+ggplot(airbnb_data, aes(x = log_price)) +
+  geom_density(fill = "skyblue1", alpha = 0.5) +
+  labs(title = "Log10 Transformation Density of Airbnb Prices", x = "Log10(Price + 1)", y = "Density")
+
+```
+
+The **log10 transformation** of Airbnb prices **helps reduce skewness** and creates a more normalized distribution, making it easier for regression models to capture patterns in the data. The transformed distribution is more symmetric and indicates that extreme price outliers have less influence on the model.
+
+
+## Analysis Plan
+To predict Airbnb listing prices in NYC, I will use six models:
+
+- **Baseline Model**: Predicts the mean price as a simple benchmark.
+- **Linear Model**: Establishes a basic regression baseline.
+- **Elastic Net Regression**: Balances lasso and ridge penalties for variable selection.
+- **Lasso Regression**: Selects the most important predictors by applying strong penalties.
+- **Random Forest**: Captures complex relationships with an ensemble of decision trees.
+- **Boosted Trees**: Further refines tree-based predictions using boosting techniques.
+
+
+#### **Preprocessing and Resampling**
+- **Data Splitting**: 80% training, 20% testing.
+- **Resampling Method**: 10-fold cross-validation to assess model performance.
+- **Feature Engineering**:
+  - **Recipe 1 (Basic)**: Standardized numerical variables, one-hot encoding for categorical variables.
+  - **Recipe 2 (Advanced)**: Adds feature interactions, polynomial terms, and removes redundant predictors.
+  
+#### **Assessment Metric**
+Model performance will be evaluated using **Root Mean Squared Error (RMSE)**, as it emphasizes large errors and aligns with our goal of accurate price prediction.
+
+
+## Modeling Progress
+
+### **Baseline Model**
+The null model, which predicts the mean price for all listings, was implemented and serves as a benchmark. 
 
 
 
 ## Misc
-
-**Next Steps:**<br>
-
-
   
 **Final Project Goals:**
 
