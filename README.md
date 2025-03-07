@@ -1,7 +1,7 @@
 ## Final Project Stat 301-2
 
 ## Overview
-The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. The analysis includes data preprocessing, exploratory analysis, and predictive modeling using classification techniques.
+The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. The analysis includes data preprocessing, exploratory analysis, and predictive modeling.
 
 ## Repository Structure
 - `memos/` – Stores progress memos detailing analysis steps and findings.
