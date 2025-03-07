@@ -1,28 +1,44 @@
 ## Final Project Stat 301-2
 
 ## Overview
-This project aims to predict the next NBA champion using historical game data, player statistics, and team rankings. The analysis includes data preprocessing, exploratory analysis, and predictive modeling using classification techniques.
+The goal of this project is to develop a predictive model that forecasts Airbnb rental prices in New York City. The analysis includes data preprocessing, exploratory analysis, and predictive modeling using classification techniques.
 
 ## Repository Structure
 - `memos/` – Stores progress memos detailing analysis steps and findings.
 - `figures/` – Contains visualizations generated during analysis.
 - `tables/` – Holds tables summarizing key data points.
 - `data/` – Includes cleaned and raw datasets used for modeling.
-- `1_data_exploration.R` – Initial data exploration and cleaning.
-- `2_data_preprocessing.R` – Data transformation and feature engineering.
-- `3_target_variable.R` – Target variable definition and preparation.
-- `nba_team_colors.RData` – NBA team color mappings for visualization.
+- `models/` – Stores trained models and related outputs.
+- `results/` – Contains evaluation metrics and other results.
+- `sandbox.R` – A script for testing and debugging code snippets.
+- `README.md` – Documentation for the project setup and usage.
+- `ramos_miracle_progress_memo_2.qmd` – Progress memo in Quarto format.
+- `ramos_miracle_progress_memo_2.html` – HTML output of the progress memo.
+- `final-project-2-miracleramos2025.Rproj` – R project file.
+- `final_project (3).html` – Rendered project output.
+- `1_initial_split.R` – Script for splitting data into training and test sets.
+- `2_recipe1_basic.R` – Basic feature engineering pipeline for Recipe 1.
+- `2_recipe1_advanced.R` – Advanced feature engineering pipeline for Recipe 1.
+- `3_recipe2_basic.R` – Basic feature engineering pipeline for Recipe 2.
+- `3_recipe2_advanced.R` – Advanced feature engineering pipeline for Recipe 2.
+- `4_fit_baseline.R` – Baseline model fitting.
+- `4_fit_lm.R` – Linear model fitting.
+- `4_fit_en.R` – Elastic Net model fitting.
+- `4_tune_en.R` – Elastic Net hyperparameter tuning.
+- `4_tune_rf.R` – Random Forest hyperparameter tuning.
+- `4_tune_knn.R` – k-NN hyperparameter tuning.
+- `4_tune_bt.R` – Boosted Trees hyperparameter tuning.
+- `5_model_analysis.R` – Model performance evaluation and comparison.
+- `6_train_final_model.R` – Training the final selected model.
+- `7_assess_final_model.R` – Final assessment of the model.
+- `.gitignore` – Specifies files to be ignored by Git version control.
+- `.Rhistory` – Stores command history in RStudio.
 
 ## Getting Started
 To run the analysis:
-1. Ensure all datasets are in the `data/` folder.
-2. Run `1_data_exploration.R` to explore and clean the data.
-3. Execute `2_data_preprocessing.R` for feature engineering.
-4. Use `3_target_variable.R` to view low-level, initial modeling with the target variable (will expand on this in Memo 2)
 
 ## Authors
 Miracle Ramos – Data Science 1 with R (STAT 301-2)
 
 ## Acknowledgments
-- Kaggle: Nathan Lauga, NBA Games Dataset
-- Basketball Reference: NBA Champions
+- Kaggle: Dgomonov, New York City Airbnb Open Data
