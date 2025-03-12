@@ -48,4 +48,3 @@ var_type_summary <- var_types %>%
 save(dataset_summary, file = here("data/dataset_summary.rda"))
 save(var_type_summary, file = here("data/var_type_summary.rda"))
 
-
