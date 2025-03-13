@@ -45,6 +45,9 @@ nba_playoff_stats_cleaned.csv
 nba_champions_cleaned.csv
 AB_NYC_2019.csv
 New_York_City_.png
+models/rf_fit.rda
+results/bt_tune.rda
+
 
 # Ignore temporary files
 *.tmp
