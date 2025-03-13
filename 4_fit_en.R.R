@@ -1,5 +1,5 @@
 # STAT 301-2 Final Project
-# Fitting the elastic net model
+# Fitting the Elastic Net model
 # 4_fit_en.R
 
 # load packages
@@ -12,7 +12,7 @@ load(here("data/airbnb_train.rda"))
 load(here("data/airbnb_test.rda"))
 
 # load tuning results
-load(here("results/elasticnet_tune.rda"))
+load(here("results/en_tune.rda"))
 
 # define basic recipe 1
 recipe1_basic <- recipe(price ~ ., data = airbnb_train) |>
@@ -24,31 +24,30 @@ recipe1_basic <- recipe(price ~ ., data = airbnb_train) |>
   step_impute_median(all_numeric(), -all_outcomes()) |>  
   step_normalize(all_numeric(), -all_outcomes())  
 
-# define elastic net model with best hyperparameters
-elasticnet_model <- linear_reg(penalty = best_elasticnet$penalty, mixture = best_elasticnet$mixture) |>
+# define Elastic Net model with best hyperparameters
+en_model_final <- linear_reg(penalty = best_en$penalty, mixture = best_en$mixture) |>
   set_engine("glmnet") |>
   set_mode("regression")
 
 # create workflow
-elasticnet_wflow <- workflow() |>
+en_wflow <- workflow() |>
   add_recipe(recipe1_basic) |>  
-  add_model(elasticnet_model)
+  add_model(en_model_final)
 
 # fit final model
-elasticnet_fit <- elasticnet_wflow |>
+en_fit <- en_wflow |>
   fit(data = airbnb_train)
 
 # predict on test set
-elasticnet_preds <- predict(elasticnet_fit, new_data = airbnb_test) |>
+en_preds <- predict(en_fit, new_data = airbnb_test) |>
   bind_cols(airbnb_test)
 
-# calculate rmse
-rmse_elasticnet <- rmse(elasticnet_preds, truth = price, estimate = .pred)
+# calculate RMSE
+rmse_en <- rmse(en_preds, truth = price, estimate = .pred)
 
 # save fitted model
-save(elasticnet_fit, file = here("models/elasticnet_fit.rda"))
+save(en_fit, file = here("models/en_fit.rda"))
 
 # save model performance
-elasticnet_performance <- data.frame(Model = "Elastic Net", RMSE = rmse_elasticnet$.estimate)
-save(elasticnet_performance, file = here("results/model_performance_en.rda"))
-
+en_performance <- data.frame(Model = "Elastic Net", RMSE = rmse_en$.estimate)
+save(en_performance, file = here("results/model_performance_en.rda"))

@@ -1,0 +1,38 @@
+---
+title: "Final Report"
+subtitle: |
+  | Final Project 
+  | Data Science 1 with R (STAT 301-2)
+author: "Miracle Ramos"
+pagetitle: "Final Project Miracle Ramos"
+date: today
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    embed-resources: true
+    link-external-newwindow: true
+
+execute:
+  warning: false
+
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[Miracle's GitHub Repo Link (miracleramos2025)](https://github.com/stat301-2-2025-winter/final-project-2-miracleramos2025.git)
+
+:::
+
+## Executive Summary 
+
+

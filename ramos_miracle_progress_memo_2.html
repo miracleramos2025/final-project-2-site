@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Miracle Ramos">
-<meta name="dcterms.date" content="2025-03-10">
+<meta name="dcterms.date" content="2025-03-13">
 
-<title>PM1 Miracle Ramos</title>
+<title>Final Project Miracle Ramos</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3075,25 +3075,29 @@ vertical-align: -.125em;
   <li><a href="#missingness-1" id="toc-missingness-1" class="nav-link" data-scroll-target="#missingness-1">Missingness</a></li>
   <li><a href="#transformations-considered" id="toc-transformations-considered" class="nav-link" data-scroll-target="#transformations-considered">Transformations Considered</a></li>
   </ul></li>
-  <li><a href="#analysis-plan" id="toc-analysis-plan" class="nav-link" data-scroll-target="#analysis-plan">Analysis Plan</a>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul>
-  <li><a href="#model-types" id="toc-model-types" class="nav-link" data-scroll-target="#model-types">Model Types</a></li>
-  <li><a href="#preprocessing-and-resampling" id="toc-preprocessing-and-resampling" class="nav-link" data-scroll-target="#preprocessing-and-resampling">Preprocessing and Resampling</a></li>
+  <li><a href="#data-splitting" id="toc-data-splitting" class="nav-link" data-scroll-target="#data-splitting">Data Splitting</a></li>
+  <li><a href="#models-considered" id="toc-models-considered" class="nav-link" data-scroll-target="#models-considered">Models Considered</a></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering">Feature Engineering</a></li>
+  <li><a href="#hyperparameter-tuning" id="toc-hyperparameter-tuning" class="nav-link" data-scroll-target="#hyperparameter-tuning">Hyperparameter Tuning</a></li>
   <li><a href="#assessment-metric" id="toc-assessment-metric" class="nav-link" data-scroll-target="#assessment-metric">Assessment Metric</a></li>
   </ul></li>
-  <li><a href="#modeling-progress" id="toc-modeling-progress" class="nav-link" data-scroll-target="#modeling-progress">Modeling Progress</a>
+  <li><a href="#model-performance-selection-results" id="toc-model-performance-selection-results" class="nav-link" data-scroll-target="#model-performance-selection-results">Model Performance &amp; Selection Results</a>
   <ul>
-  <li><a href="#baseline-model" id="toc-baseline-model" class="nav-link" data-scroll-target="#baseline-model">Baseline Model</a></li>
-  <li><a href="#linear-model" id="toc-linear-model" class="nav-link" data-scroll-target="#linear-model">Linear Model</a></li>
-  <li><a href="#elastic-net-model" id="toc-elastic-net-model" class="nav-link" data-scroll-target="#elastic-net-model">Elastic Net Model</a></li>
+  <li><a href="#model-performance-summary" id="toc-model-performance-summary" class="nav-link" data-scroll-target="#model-performance-summary">Model Performance Summary</a></li>
+  <li><a href="#tuning-parameter-analysis" id="toc-tuning-parameter-analysis" class="nav-link" data-scroll-target="#tuning-parameter-analysis">Tuning Parameter Analysis</a></li>
   </ul></li>
-  <li><a href="#progress-summary-next-steps" id="toc-progress-summary-next-steps" class="nav-link" data-scroll-target="#progress-summary-next-steps">Progress Summary &amp; Next Steps</a>
+  <li><a href="#final-model-analysis" id="toc-final-model-analysis" class="nav-link" data-scroll-target="#final-model-analysis">Final Model Analysis</a>
   <ul>
-  <li><a href="#current-status" id="toc-current-status" class="nav-link" data-scroll-target="#current-status">Current Status</a></li>
-  <li><a href="#potential-challenges" id="toc-potential-challenges" class="nav-link" data-scroll-target="#potential-challenges">Potential Challenges</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
-  <li><a href="#final-project-goals" id="toc-final-project-goals" class="nav-link" data-scroll-target="#final-project-goals">Final Project Goals</a></li>
+  <li><a href="#model-fit-evaluation" id="toc-model-fit-evaluation" class="nav-link" data-scroll-target="#model-fit-evaluation">Model Fit &amp; Evaluation</a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#comment-on-generative-ai-use" id="toc-comment-on-generative-ai-use" class="nav-link" data-scroll-target="#comment-on-generative-ai-use">Comment on Generative AI Use</a></li>
   </ul>
 </nav>
 </div>
@@ -3103,7 +3107,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Progress Memo 2</h1>
+<h1 class="title">Final Project</h1>
 <p class="subtitle lead"></p><div class="line-block">Final Project<br>
 Data Science 1 with R (STAT 301-2)</div><p></p>
 </div>
@@ -3122,7 +3126,7 @@ Data Science 1 with R (STAT 301-2)</div><p></p>
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 10, 2025</p>
+      <p class="date">March 13, 2025</p>
     </div>
   </div>
   
@@ -3376,32 +3380,46 @@ Figure 2: Log10 Transforation on Distribution of Prices
 <p>The <strong>log10 transformation</strong> of Airbnb prices <strong>helps reduce skewness</strong> and creates a more normalized distribution, making it easier for regression models to capture patterns in the data. The transformed distribution is more symmetric and indicates that extreme price outliers have less influence on the model.</p>
 </section>
 </section>
-<section id="analysis-plan" class="level2">
-<h2 class="anchored" data-anchor-id="analysis-plan">Analysis Plan</h2>
-<section id="model-types" class="level4">
-<h4 class="anchored" data-anchor-id="model-types">Model Types</h4>
-<p>To predict Airbnb listing prices in NYC, I will use six models:</p>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<section id="data-splitting" class="level4">
+<h4 class="anchored" data-anchor-id="data-splitting">Data Splitting</h4>
+<ul>
+<li><strong>Training Set</strong>: 80%</li>
+<li><strong>Testing Set</strong>: 20%</li>
+<li><strong>Resampling Method</strong>: 3-fold cross-validation with 3 repeats</li>
+</ul>
+</section>
+<section id="models-considered" class="level4">
+<h4 class="anchored" data-anchor-id="models-considered">Models Considered</h4>
+<p>To predict Airbnb listing prices in NYC, six models were implemented:</p>
 <ul>
 <li><strong>Baseline Model</strong>: Predicts the mean price as a simple benchmark.</li>
 <li><strong>Linear Model</strong>: Establishes a basic regression baseline.</li>
 <li><strong>Elastic Net Regression</strong>: Balances lasso and ridge penalties for variable selection.</li>
-<li><strong>Lasso Regression</strong>: Selects the most important predictors by applying strong penalties.</li>
+<li><strong>K-Nearest Neighbors (KNN)</strong>: A distance-based model that predicts prices based on the similarity of nearby listings.</li>
 <li><strong>Random Forest</strong>: Captures complex relationships with an ensemble of decision trees.</li>
 <li><strong>Boosted Trees</strong>: Further refines tree-based predictions using boosting techniques.</li>
 </ul>
 </section>
-<section id="preprocessing-and-resampling" class="level4">
-<h4 class="anchored" data-anchor-id="preprocessing-and-resampling">Preprocessing and Resampling</h4>
-<ul>
-<li><strong>Data Splitting</strong>: 80% training, 20% testing.</li>
-<li><strong>Resampling Method</strong>: 10-fold cross-validation to assess model performance.</li>
-<li><strong>Feature Engineering</strong>:
+<section id="feature-engineering" class="level4">
+<h4 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h4>
+<p>To prepare the dataset for modeling, four structured preprocessing recipes were developed:</p>
 <ul>
 <li><strong>Recipe 1 (Basic)</strong> (<code>2_recipe1_basic.R</code>): Standardizes numerical variables and applies one-hot encoding for categorical variables.</li>
 <li><strong>Recipe 1 (Advanced)</strong> (<code>2_recipe1_advanced.R</code>): Builds on the basic version by adding feature interactions and polynomial terms while removing redundant predictors.</li>
 <li><strong>Recipe 2 (Basic)</strong> (<code>3_recipe2_basic.R</code>): Uses a different transformation approach suited for models that require less preprocessing.</li>
 <li><strong>Recipe 2 (Advanced)</strong> (<code>3_recipe2_advanced.R</code>): Incorporates additional transformations, such as non-linear feature engineering and refined categorical encoding.</li>
-</ul></li>
+</ul>
+</section>
+<section id="hyperparameter-tuning" class="level4">
+<h4 class="anchored" data-anchor-id="hyperparameter-tuning">Hyperparameter Tuning</h4>
+<p>Hyperparameters for selected models were optimized using grid search with 3-fold cross-validation and 3 repeats:</p>
+<ul>
+<li><strong>Elastic Net Regression</strong>: Tuned <code>penalty</code> (regularization strength) and <code>mixture</code> (balance between ridge and lasso).</li>
+<li><strong>K-Nearest Neighbors (KNN)</strong>: Tuned <code>neighbors (k)</code> to determine the optimal number of listings to reference.</li>
+<li><strong>Random Forest</strong>: Tuned <code>mtry</code> (number of predictors considered at each split) and <code>min_n</code> (minimum number of observations in a terminal node).</li>
+<li><strong>Boosted Trees</strong>: Tuned <code>mtry</code>, <code>min_n</code>, and <code>learn_rate</code>. A log10 transformation was applied to <code>learn_rate</code> to improve tuning efficiency.</li>
 </ul>
 </section>
 <section id="assessment-metric" class="level4">
@@ -3409,122 +3427,17 @@ Figure 2: Log10 Transforation on Distribution of Prices
 <p>Model performance will be evaluated using <strong>Root Mean Squared Error (RMSE)</strong> because it emphasizes large errors and aligns with the goal of predicting prices accurately.</p>
 </section>
 </section>
-<section id="modeling-progress" class="level2">
-<h2 class="anchored" data-anchor-id="modeling-progress">Modeling Progress</h2>
-<section id="baseline-model" class="level4">
-<h4 class="anchored" data-anchor-id="baseline-model">Baseline Model</h4>
+<section id="model-performance-selection-results" class="level2">
+<h2 class="anchored" data-anchor-id="model-performance-selection-results">Model Performance &amp; Selection Results</h2>
+<section id="model-performance-summary" class="level4">
+<h4 class="anchored" data-anchor-id="model-performance-summary">Model Performance Summary</h4>
 <div class="cell">
-<div id="tbl-baseline-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-model-performance-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-baseline-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 4: Baseline Model Performance
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-performance-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 4: Model Performance Summary
 </figcaption>
-<div aria-describedby="tbl-baseline-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Baseline</td>
-<td style="text-align: right;">202.7405</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>The <strong>Baseline Model</strong> predicts the <strong>mean Airbnb price</strong> for all listings, resulting in an <strong>RMSE of 202.74</strong>. This model is a starting point for comparison since it does not use any predictors. A lower RMSE in other models means better accuracy.</p>
-</section>
-<section id="linear-model" class="level4">
-<h4 class="anchored" data-anchor-id="linear-model">Linear Model</h4>
-<div class="cell">
-<div id="tbl-lm-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-lm-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 5: Linear Model Performance
-</figcaption>
-<div aria-describedby="tbl-lm-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Linear Model</td>
-<td style="text-align: right;">157.8183</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>The <strong>Linear Model</strong> improves significantly over the baseline, reducing the <strong>RMSE to 157.82</strong>. This suggests that location, room type, and availability help predict price. However, linear models assume a fixed relationship between factors and price, which may limit accuracy if the patterns are more complex.</p>
-</section>
-<section id="elastic-net-model" class="level4">
-<h4 class="anchored" data-anchor-id="elastic-net-model">Elastic Net Model</h4>
-<div class="cell">
-<div id="tbl-en-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-en-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 6: Elastic Net Model Performance
-</figcaption>
-<div aria-describedby="tbl-en-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output-display">
-<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">Model</th>
-<th style="text-align: right;">RMSE</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Elastic Net</td>
-<td style="text-align: right;">188.673</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</figure>
-</div>
-</div>
-<p>The <strong>Elastic Net Model</strong> combines lasso and ridge regression, this resulted in an <strong>RMSE of 188.67</strong>. This is higher than the linear model but lower than the baseline. Regularization helps prevent overfitting but might remove important features. More tuning or feature adjustments could improve performance.</p>
-</section>
-</section>
-<section id="progress-summary-next-steps" class="level2">
-<h2 class="anchored" data-anchor-id="progress-summary-next-steps">Progress Summary &amp; Next Steps</h2>
-<section id="current-status" class="level4">
-<h4 class="anchored" data-anchor-id="current-status">Current Status</h4>
-<p>Since Progress Memo 1, significant progress has been made in data preparation and modeling:</p>
-<ul>
-<li><strong>Dataset preprocessing</strong>: Cleaned data, handled missing values, and engineered features using four structured recipes.</li>
-<li><strong>Baseline Model</strong>: Established a simple mean-based prediction as a reference, RMSE = 202.74.</li>
-<li><strong>Linear Model</strong>: Implemented and evaluated a standard regression model, RMSE = 157.82, showing a strong improvement over the baseline.</li>
-<li><strong>Elastic Net Model</strong>: Tuned and fitted an Elastic Net regression model, RMSE = 188.67, balancing variable selection and regularization.</li>
-<li><strong>Structured Model Pipeline</strong>: Set up organized scripts for data splitting, feature engineering, tuning, and model fitting.</li>
-</ul>
-<p>At this stage, <strong>three models have been fitted and evaluated</strong> which have provided insights into pricing prediction for Airbnb listings. The linear model currently performs the best, while Elastic Net may need further tuning.</p>
-<div class="cell">
-<div id="tbl-summary-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table 7: Model Performance Summary
-</figcaption>
-<div aria-describedby="tbl-summary-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div aria-describedby="tbl-model-performance-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
 <table class="do-not-create-environment cell caption-top table table-sm table-striped small">
 <thead>
@@ -3544,7 +3457,19 @@ Table 7: Model Performance Summary
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Elastic Net</td>
-<td style="text-align: right;">188.6730</td>
+<td style="text-align: right;">188.6562</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KNN</td>
+<td style="text-align: right;">186.1502</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Random Forest</td>
+<td style="text-align: right;">169.9830</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Boosted Trees</td>
+<td style="text-align: right;">198.2235</td>
 </tr>
 </tbody>
 </table>
@@ -3554,31 +3479,81 @@ Table 7: Model Performance Summary
 </div>
 </div>
 </section>
-<section id="potential-challenges" class="level4">
-<h4 class="anchored" data-anchor-id="potential-challenges">Potential Challenges</h4>
+<section id="tuning-parameter-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="tuning-parameter-analysis">Tuning Parameter Analysis</h4>
+<div class="cell">
+<div id="tbl-tuning-parameters" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tuning-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 5: Tuned Model Parameters
+</figcaption>
+<div aria-describedby="tbl-tuning-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Tuning Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Elastic Net</td>
+<td style="text-align: left;">mixture: 0.222 penalty: 1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KNN</td>
+<td style="text-align: left;">neighbors: 44</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Random Forest</td>
+<td style="text-align: left;">mtry: 8 min_n: 4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Boosted Trees</td>
+<td style="text-align: left;">mtry: 2 min_n: 10 learn_rate: 1.0023</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="final-model-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="final-model-analysis">Final Model Analysis</h2>
+<section id="model-fit-evaluation" class="level4">
+<h4 class="anchored" data-anchor-id="model-fit-evaluation">Model Fit &amp; Evaluation</h4>
+<div id="tbl-final-model-performance" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-final-model-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 6: Final Model Summary
+</figcaption>
+<div aria-describedby="tbl-final-model-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+
+</div>
+</div>
+</figure>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<section id="future-work" class="level4">
+<h4 class="anchored" data-anchor-id="future-work">Future Work</h4>
+</section>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
-<li><strong>Handling Outliers</strong>: Extreme Airbnb prices, $10,000 listings, may affect performance. Alternative modeling strategies may help manage extreme listings.</li>
-<li><strong>Time Concerns</strong>: Some models like the tree-based methods may take longer to tune.</li>
+<li>Kaggle: Kaggle: <em>Dgomonov, New York City Airbnb Open Data</em>. Link</li>
 </ul>
 </section>
-<section id="next-steps" class="level4">
-<h4 class="anchored" data-anchor-id="next-steps">Next Steps</h4>
-<ul>
-<li><strong>Train Remaining Models</strong>: Fit Lasso, Random Forest, and Boosted Trees using the same process.</li>
-<li><strong>Improve Features</strong>: Test if Recipe 2 (Advanced) boosts model performance.</li>
-<li><strong>Tune Elastic Net</strong>: Adjust settings to improve accuracy.</li>
-<li><strong>Find Key Factors</strong>: Identify which variables impact pricing the most.</li>
-<li><strong>Pick the Best Model</strong>: Compare RMSE values to choose the top performer.</li>
-</ul>
-</section>
-<section id="final-project-goals" class="level4">
-<h4 class="anchored" data-anchor-id="final-project-goals">Final Project Goals</h4>
-<ul>
-<li>Make Final Predictions</li>
-<li>Interpret Findings</li>
-<li>Complete Executive Summary</li>
-</ul>
-</section>
+<section id="comment-on-generative-ai-use" class="level2">
+<h2 class="anchored" data-anchor-id="comment-on-generative-ai-use">Comment on Generative AI Use</h2>
 </section>
 
 </main>

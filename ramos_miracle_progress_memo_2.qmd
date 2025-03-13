@@ -1,10 +1,10 @@
 ---
-title: "Progress Memo 2"
+title: "Final Project"
 subtitle: |
   | Final Project 
   | Data Science 1 with R (STAT 301-2)
 author: "Miracle Ramos"
-pagetitle: "PM1 Miracle Ramos"
+pagetitle: "Final Project Miracle Ramos"
 date: today
 
 format:
@@ -188,148 +188,123 @@ ggplot(airbnb_data, aes(x = log_price)) +
 The **log10 transformation** of Airbnb prices **helps reduce skewness** and creates a more normalized distribution, making it easier for regression models to capture patterns in the data. The transformed distribution is more symmetric and indicates that extreme price outliers have less influence on the model.
 
 
-## Analysis Plan
+## Methods
 
-#### Model Types
-To predict Airbnb listing prices in NYC, I will use six models:
+#### Data Splitting
+  - **Training Set**: 80%
+  - **Testing Set**: 20%
+  - **Resampling Method**: 3-fold cross-validation with 3 repeats
+
+#### Models Considered
+To predict Airbnb listing prices in NYC, six models were implemented:
 
 - **Baseline Model**: Predicts the mean price as a simple benchmark.
 - **Linear Model**: Establishes a basic regression baseline.
 - **Elastic Net Regression**: Balances lasso and ridge penalties for variable selection.
-- **Lasso Regression**: Selects the most important predictors by applying strong penalties.
+- **K-Nearest Neighbors (KNN)**: A distance-based model that predicts prices based on the similarity of nearby listings.
 - **Random Forest**: Captures complex relationships with an ensemble of decision trees.
 - **Boosted Trees**: Further refines tree-based predictions using boosting techniques.
 
+#### Feature Engineering
+To prepare the dataset for modeling, four structured preprocessing recipes were developed:
 
-#### Preprocessing and Resampling
-- **Data Splitting**: 80% training, 20% testing.
-- **Resampling Method**: 10-fold cross-validation to assess model performance.
-- **Feature Engineering**:
   - **Recipe 1 (Basic)** (`2_recipe1_basic.R`): Standardizes numerical variables and applies one-hot encoding for categorical variables.
   - **Recipe 1 (Advanced)** (`2_recipe1_advanced.R`): Builds on the basic version by adding feature interactions and polynomial terms while removing redundant predictors.
   - **Recipe 2 (Basic)** (`3_recipe2_basic.R`): Uses a different transformation approach suited for models that require less preprocessing.
   - **Recipe 2 (Advanced)** (`3_recipe2_advanced.R`): Incorporates additional transformations, such as non-linear feature engineering and refined categorical encoding.
   
+#### Hyperparameter Tuning
+Hyperparameters for selected models were optimized using grid search with 3-fold cross-validation and 3 repeats:
+
+  - **Elastic Net Regression**: Tuned `penalty` (regularization strength) and `mixture` (balance between ridge and lasso).
+  - **K-Nearest Neighbors (KNN)**: Tuned `neighbors (k)` to determine the optimal number of listings to reference.
+  - **Random Forest**: Tuned `mtry` (number of predictors considered at each split) and `min_n` (minimum number of observations in a terminal node).
+  - **Boosted Trees**: Tuned `mtry`, `min_n`, and `learn_rate`. A log10 transformation was applied to `learn_rate` to improve tuning efficiency.
+  
 #### Assessment Metric
 Model performance will be evaluated using **Root Mean Squared Error (RMSE)** because it emphasizes large errors and aligns with the goal of predicting prices accurately.
 
 
-## Modeling Progress
+## Model Performance & Selection Results
 
-#### Baseline Model
+#### Model Performance Summary
 ```{r}
-#| label: tbl-baseline-performance
-#| tbl-cap: "Baseline Model Performance"
-#| echo: false
-
-library(knitr)
-library(here)
-
-# load baseline performance
-load(here("results/model_performance_baseline.rda"))
-
-# display results
-kable(baseline_performance)
-
-```
-
-The **Baseline Model** predicts the **mean Airbnb price** for all listings, resulting in an **RMSE of 202.74**. This model is a starting point for comparison since it does not use any predictors. A lower RMSE in other models means better accuracy.
-
-
-#### Linear Model
-```{r}
-#| label: tbl-lm-performance
-#| tbl-cap: "Linear Model Performance"
-#| echo: false
-
-library(knitr)
-library(here)
-
-# load linear model performance
-load(here("results/model_performance_lm.rda"))
-
-# display results
-kable(lm_performance)
-
-```
-The **Linear Model** improves significantly over the baseline, reducing the **RMSE to 157.82**. This suggests that location, room type, and availability help predict price. However, linear models assume a fixed relationship between factors and price, which may limit accuracy if the patterns are more complex.
-
-
-#### Elastic Net Model
-```{r}
-#| label: tbl-en-performance
-#| tbl-cap: "Elastic Net Model Performance"
-#| echo: false
-
-library(knitr)
-library(here)
-
-# load elastic net model performance
-load(here("results/model_performance_en.rda"))
-
-# display results
-kable(elasticnet_performance)
-
-```
-The **Elastic Net Model** combines lasso and ridge regression, this resulted in an **RMSE of 188.67**. This is higher than the linear model but lower than the baseline. Regularization helps prevent overfitting but might remove important features. More tuning or feature adjustments could improve performance.
-
-## Progress Summary & Next Steps
-
-#### Current Status
-
-Since Progress Memo 1, significant progress has been made in data preparation and modeling:
-
-  - **Dataset preprocessing**: Cleaned data, handled missing values, and engineered features using four structured recipes.
-  - **Baseline Model**: Established a simple mean-based prediction as a reference, RMSE = 202.74.
-  - **Linear Model**: Implemented and evaluated a standard regression model, RMSE = 157.82, showing a strong improvement over the baseline.
-  - **Elastic Net Model**: Tuned and fitted an Elastic Net regression model, RMSE = 188.67, balancing variable selection and regularization.
-  - **Structured Model Pipeline**: Set up organized scripts for data splitting, feature engineering, tuning, and model fitting. 
-  
-At this stage, **three models have been fitted and evaluated** which have provided insights into pricing prediction for Airbnb listings. The linear model currently performs the best, while Elastic Net may need further tuning.
-
-```{r}
-#| label: tbl-summary-performance
+#| label: tbl-model-performance-summary
 #| tbl-cap: "Model Performance Summary"
 #| echo: false
 
-# load packages
-library(tidyverse)
-library(here)
 library(knitr)
+library(here)
+library(kableExtra)
 
-# load model performance results
-load(here("results/model_performance_baseline.rda"))
-load(here("results/model_performance_lm.rda"))
-load(here("results/model_performance_en.rda"))
+# load model summary performance
+load("results/model_performance_summary.rda")
 
-# combine model performances into a summary table
-model_performance_summary <- bind_rows(
-  baseline_performance,
-  lm_performance,
-  elasticnet_performance
-)
+# keep only relevant columns for this table
+model_performance_summary <- model_performance %>%
+  select(Model, RMSE)
 
-# display model performance table
+# display results with better spacing
 kable(model_performance_summary)
+
 ```
 
 
-#### Potential Challenges
-  - **Handling Outliers**: Extreme Airbnb prices, $10,000 listings, may affect performance. Alternative modeling strategies may help manage extreme listings.
-  - **Time Concerns**: Some models like the tree-based methods may take longer to tune.
+#### Tuning Parameter Analysis
+```{r}
+#| label: tbl-tuning-parameters
+#| tbl-cap: "Tuned Model Parameters"
+#| echo: false
+
+library(dplyr)
+library(knitr)
+
+# filter for models that had hyperparameter tuning
+tuned_models <- model_performance %>%
+  filter(Model %in% c("Elastic Net", "KNN", "Random Forest", "Boosted Trees")) %>%
+  select(Model, tuning_parameter) %>%  # Correct column reference
+  rename(`Tuning Parameters` = tuning_parameter)  # Rename for display
+
+# display results
+kable(tuned_models)
+
+```
+
+
+## Final Model Analysis
+
+#### Model Fit & Evaluation
+```{r}
+#| label: tbl-final-model-performance
+#| tbl-cap: "Final Model Summary"
+#| echo: false
+#| eval: false
+
+library(knitr)
+library(here)
+
+# load final model performance
+load("results/final_model_performance.rda")
+
+# display results
+kable(final_rmse)
+
+```
+
+
   
 
-#### Next Steps  
+## Conclusion
 
-  - **Train Remaining Models**: Fit Lasso, Random Forest, and Boosted Trees using the same process.
-  - **Improve Features**: Test if Recipe 2 (Advanced) boosts model performance.
-  - **Tune Elastic Net**: Adjust settings to improve accuracy.
-  - **Find Key Factors**: Identify which variables impact pricing the most.
-  - **Pick the Best Model**: Compare RMSE values to choose the top performer.
 
-#### Final Project Goals
+#### Future Work
 
-  - Make Final Predictions
-  - Interpret Findings
-  - Complete Executive Summary
+
+## References
+
+  - Kaggle: Kaggle: *Dgomonov, New York City Airbnb Open Data*. Link
+
+## Comment on Generative AI Use
+
+
 
