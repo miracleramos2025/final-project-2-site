@@ -229,6 +229,8 @@ Model performance will be evaluated using **Root Mean Squared Error (RMSE)** bec
 
 #### Model Performance Summary
 
+Root Mean Squared Error (RMSE) was used to evaluate model performance and determine the best model for predicting Airbnb prices.
+
 The table below summarizes the RMSE values for each model:
 ```{r}
 #| label: tbl-model-performance-summary
@@ -250,11 +252,11 @@ model_performance_summary <- model_performance %>%
 kable(model_performance_summary)
 
 ```
-From @tbl-model-performance-summary, it is evident that the **Linear Model** had the lowest RMSE (157.82), making it the best-performing model. The **Random Forest model** (169.98 RMSE) was the next best, while **Elastic Net**, **KNN**, and **Boosted Trees** performed worse than expected.
+From @tbl-model-performance-summary, it is evident that the **Linear Model had the lowest RMSE (157.82), making it the best performing model**. The Random Forest model was the next best, while Elastic Net, KNN, and Boosted Trees performed worse than expected.
 
 
 #### Tuning Parameter Analysis
-Hyperparameter tuning played a critical role in optimizing model performance. The following table summarizes the best parameters selected for models that required tuning:
+The following table outlines the best hyperparameters selected for each tuned model:
 ```{r}
 #| label: tbl-tuning-parameters
 #| tbl-cap: "Tuned Model Parameters"
@@ -273,32 +275,33 @@ tuned_models <- model_performance %>%
 kable(tuned_models)
 
 ```
+
 #### Analysis of Tuning Results
 
   - **Elastic Net Regression**: The best parameters selected were mixture = 0.222 (closer to ridge regression) and penalty = 1. This suggests that a small amount of variable selection was needed, but regularization played a more significant role.
-  - **KNN**: The best neighbors value was 44, meaning predictions were based on an average of the 44 closest listings.
-  - **Random Forest**: The best combination was mtry = 8 and min_n = 4, meaning 8 predictors were considered at each split, and terminal nodes required at least 4 observations.
-  **Boosted Trees**: The best parameters were mtry = 2, min_n = 10, and learn_rate = 1.0023. The learning rate being so high suggests the model may not have been effectively learning small improvements, leading to suboptimal performance.
+  - **KNN**: The best `neighbors` value was 44. Predictions were based on an average of the 44 closest listings.
+  - **Random Forest**: The best combination was `mtry = 8` and `min_n = 4`. 8 predictors were considered at each split and terminal nodes required at least 4 observations.
+  - **Boosted Trees**: The best parameters were `mtry = 2`, `min_n = 10`, and `learn_rate = 1.0023`. The learning rate being so high suggests the model may not have been effectively learning small improvements which lead to suboptimal performance.
   
-#### Furtherr Tuning Considerations
-The results suggested that:
+#### Further Tuning Considerations
+While further tuning could be explored, there were computational and memory limitations that affected the extent of hyperparameter optimization:
 
-  - **Boosted Trees struggled** with a high learning rate (1.0023). Ideally, a finer grid search could have tested smaller learning rates (e.g., 0.001–0.1), but due to memory constraints, this was limited. Boosted Trees require significantly more RAM and processing power than other models, and the available system resources restricted the extent of hyperparameter tuning.
-  - **KNN performed moderately well**, but the choice of 44 neighbors may indicate that a smaller or larger value could perform better. A finer search in increments of 5 (e.g., 30–50) could help.
-  - **Elastic Net leaned towards ridge regression**, meaning variable selection was less critical. Future analysis could test pure ridge regression to confirm.
+  - **Boosted Trees required significant memory and processing power**. Due to system constraints, testing a finer grid for the learning rate (0.001–0.1 instead of 1.0023) was not feasible.
+  - **KNN performed moderately well**, but the choice of 44 neighbors may indicate that a smaller or larger value could perform better. Testing in increments of 5 within 30–50 might have been useful.
+  - **Elastic Net leaned towards ridge regression**, variable selection was less critical. Future analysis could test pure ridge regression to confirm.
 
-Given the computational cost of tuning tree-based models, especially with cross-validation and large hyperparameter grids, further optimization would require more memory and processing power. Future work could explore gradient boosting libraries optimized for efficiency which may yield better performance with lower memory usage.
+Given these challenges, future work could explore more efficient implementations. For example, optimized gradient boosting libraries that might yield better performance with lower memory requirements.
 
 #### Final Model Selection
-The Linear Model was chosen as the final model because:
+After analyzing the model performances, the **Linear Model** was chosen as the final model because:
 
   - It had the **lowest RMSE (157.82)**.
   - **It outperformed all tuned models** including complex models like Random Forest and Boosted Trees.
-  - **It is interpretable**, meaning insights can be drawn from coefficients about which factors influence Airbnb prices.
-  - The additional **complexity of tree-based methods did not justify their **marginal improvements**.
+  - **It is interpretable**, insights can be drawn from coefficients about which factors influence Airbnb prices.
+  - The additional **complexity of tree-based methods did not justify their marginal improvements**.
   
 ##### Was this result surprising?
-Yes and no. Initially, it was expected that Random Forest or Boosted Trees might perform best since they capture nonlinear relationships. However, given that Airbnb prices may have a relatively linear relationship with features like location and room type, it makes sense that a Linear Model performed best.
+Yes and no. Initially, it was expected that Random Forest or Boosted Trees might perform best since they capture nonlinear relationships. However, since Airbnb pricing is influenced by structured factors like location, room type, and availability, a Linear Model’s assumptions may actually align well with the dataset. The poor performance of Boosted Trees was surprising but given the high learning rate issue and computational constraints, this result makes sense.
 
 ## Final Model Analysis
 
