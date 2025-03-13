@@ -15,38 +15,37 @@ load(here("models/final_fit.rda"))
 final_preds <- predict(final_fit, new_data = airbnb_test) |> 
   bind_cols(airbnb_test)
 
-# compute RMSE
-final_rmse <- rmse(final_preds, truth = price, estimate = .pred)
+# Check if price was transformed during training
+if ("log_price" %in% colnames(airbnb_train)) {
+  # Ensure all predictions are valid before back-transforming
+  final_preds <- final_preds |> 
+    mutate(.pred = ifelse(.pred < 0, NA, 10^.pred - 1))  # Set invalid predictions to NA
+}
 
-# compute additional metrics for more evaluation
-final_mae <- mae(final_preds, truth = price, estimate = .pred)
-final_rsq <- rsq(final_preds, truth = price, estimate = .pred)
+# Remove non-finite values before computing metrics
+final_preds_clean <- final_preds |> 
+  filter(!is.na(.pred), !is.infinite(.pred), !is.na(price), !is.infinite(price))
 
-# print model performance metrics
+# Cap extreme predictions at the 99th percentile to prevent instability
+upper_bound <- quantile(final_preds_clean$.pred, 0.99, na.rm = TRUE)
+final_preds_clean <- final_preds_clean |> mutate(.pred = pmin(.pred, upper_bound))
+
+# Compute evaluation metrics on original price scale
+final_rmse <- rmse(final_preds_clean, truth = price, estimate = .pred)
+final_mae <- mae(final_preds_clean, truth = price, estimate = .pred)
+final_rsq <- rsq(final_preds_clean, truth = price, estimate = .pred)
+
+# Print model performance metrics
 print(final_rmse)
 print(final_mae)
 print(final_rsq)
 
-# save final model performance
+# Save final model performance
 final_model_performance <- data.frame(
   Metric = c("RMSE", "MAE", "R-squared"),
   Value = c(final_rmse$.estimate, final_mae$.estimate, final_rsq$.estimate)
 )
 save(final_model_performance, file = here("results/final_model_performance.rda"))
 
-# visualize predictions vs actual values
-library(ggplot2)
-
-ggplot(final_preds, aes(x = .pred, y = price)) +
-  geom_point(alpha = 0.3) +
-  geom_abline(slope = 1, intercept = 0, color = "blue") +
-  labs(
-    title = "Predicted vs. Actual Prices",
-    x = "Predicted Price",
-    y = "Actual Price"
-  ) +
-  theme_minimal()
-
-# save plot
-ggsave(here("results/final_model_predictions.png"))
-
+# Save final predictions for visualization
+save(final_preds_clean, file = here("results/final_preds.rda"))

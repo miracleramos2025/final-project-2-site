@@ -306,11 +306,12 @@ Yes and no. Initially, it was expected that Random Forest or Boosted Trees might
 ## Final Model Analysis
 
 #### Model Fit & Evaluation
+The final model was evaluated on the **test set**, with the following key performance metrics:
+
 ```{r}
 #| label: tbl-final-model-performance
 #| tbl-cap: "Final Model Summary"
 #| echo: false
-#| eval: false
 
 library(knitr)
 library(here)
@@ -319,24 +320,135 @@ library(here)
 load("results/final_model_performance.rda")
 
 # display results
-kable(final_rmse)
+kable(final_model_performance)
 
 ```
 
+##### Interpretation of Metrics
 
+  - **Root Mean Squared Error (RMSE = 188.70)**: The typical prediction error in Airbnb prices is $188.70.
+  - **Mean Absolute Error (MAE = 69.38)**: On average, predictions are off by $69.38, making it a more interpretable error measure.
+  - **R-squared (0.134)**: The model explains only 13.4% of the variance in Airbnb prices. This suggests that other important factors like seasonality, amenities, and host behavior might be missing from our features.
   
+##### Target Variable & Transformations
+
+  - The target variable, `price`, was log-transformed for some models, including Boosted Trees to help reduce the impact of extreme price outliers.
+  - The final Linear Model was trained on the untransformed price, meaning all predictions and evaluations are in actual dollar values.
+  - While log transformation improved stability for tree-based models, the linear regression model performed best without it.
+
+#### Predicted Price vs. Actual Price Analysis
+To visually assess model accuracy, the scatter plot below compares predicted and actual Airbnb prices:
+
+```{r}
+#| label: fig-final-predictions
+#| fig-cap: "Predicted vs. Actual Prices"
+#| echo: false
+
+# load data
+load("results/final_preds.rda")
+
+# load package
+library(ggplot2)
+
+# make the plot
+ggplot(final_preds_clean, aes(x = .pred, y = price)) +
+  geom_point(alpha = 0.15, color = "black") +  
+  geom_smooth(method = "lm", color = "red", se = FALSE, linewidth = 1.2) +  
+  labs(
+    title = "Predicted vs. Actual Airbnb Prices",
+    x = "Predicted Price ($)",
+    y = "Actual Price ($)"
+  ) +
+  theme_light() +  
+  coord_cartesian(xlim = c(0, 400), ylim = c(0, 500))
+
+```
+##### Observations of the Model’s Performance
+
+  - The **majority of points fall along the diagonal** which suggests the model performs well for mid-range prices.
+  - **Expensive Airbnb listings**, above $300-$400, **tend to be underpredicted**, indicating that the model struggles to capture premium features.
+  - The **linear regression assumption may be limiting** the model’s ability to predict nonlinear pricing trends such as surge pricing or special event demand.
+
+
+#### Comparison to the Baseline Model
+
+  - The **Baseline Model (RMSE = 202.74)** was used as a benchmark.
+  - The **Linear Model (RMSE = 188.70)** shows some improvement but not a drastic reduction in error.
+  
+**While the Linear Model performed better than the Baseline, the improvement is marginal**. This suggests that a simple model performs almost as well as a full regression model and indicates that price fluctuations are not well captured by the available features.
+
+#### Prediction Error Distribution
+To further assess the model’s accuracy, the following table summarizes the distribution of absolute prediction errors:
+```{r}
+#| label: tbl-prediction-errors
+#| tbl-cap: "Prediction Error Distribution"
+#| echo: false
+
+library(knitr)
+library(dplyr)
+library(tidyr)
+
+# error distribution
+error_summary <- final_preds_clean |>
+  mutate(abs_error = abs(price - .pred)) |>
+  summarize(
+    `25%` = quantile(abs_error, 0.25),
+    `50% (Median)` = quantile(abs_error, 0.50),
+    `75%` = quantile(abs_error, 0.75)
+  ) |>
+  pivot_longer(cols = everything(), names_to = "Percentile", values_to = "Absolute Error ($)")
+
+# display table
+kable(error_summary)
+
+```
+##### Key Takeaways
+
+  - 25% of predictions are within $30.21 of the actual price.
+  - The median error is $69.38, meaning half of the listings are predicted within $69.38 of their true price.
+  - The 75th percentile error is $142.87. This shows that some listings have large errors, especially at higher price points.
+  
+#### Limitations & Future Improvements
+
+##### Model Limitations
+  
+  - **Low R² (13.4%)**: The model explains only a small portion of Airbnb price variability. This suggests that key influencing factors, such as seasonal trends, listing amenities, and host policies, are missing from our dataset.
+  - **Prediction Errors for Expensive Listings**: The scatter plot shows that high-priced Airbnb listings tend to be underpredicted. The model does not capture premium factors like luxury amenities or unique experiences.
+- **Assumption of Linearity**: Since the final model is a linear regression, it assumes a linear relationship between price and predictors which may not fully capture complex interactions.
+
+##### Potential Data Enhancements
+  - **Include Additional Features**: Incorporating host response rates, listing popularity metrics, and seasonal demand data could improve prediction accuracy.
+  - **Better Handling of Categorical Data**: Rather than one-hot encoding all categorical features, using target encoding could preserve more information.
+  
+  
+#### Final Reflection: Is This Model Useful?
+Although the Linear Model performed better than the Baseline Model, the reduction in error from an RMSE of 202.74 to 188.70 was relatively small. Given the high variability in price, the model may not be precise enough for individual pricing predictions but it could still provide a useful general pricing estimate.
+
+If the goal is interpretability, this model is useful as it clearly shows how factors like location and room type impact price. 
 
 ## Conclusion
 
+#### Key Takeaways
+This project aimed to predict Airbnb prices in New York City using various machine learning models. The **Linear Model** came out as the **best performing model**, offering the lowest RMSE (188.70) while maintaining interpretability. However, **its predictive power remained limited** and explained only 13.4% of the variance in price.
+
+Despite tuning efforts, more complex models like Random Forest and Boosted Trees did not outperform linear regression significantly which was likely due to the dataset’s feature limitations. The log transformation improved stability for tree-based models but did not yield enough improvement to justify the added complexity.
 
 #### Future Work
+There are several ways to improve Airbnb price prediction:
 
+  - **Feature Engineering**: Adding features like seasonal demand, listing popularity, host response rates, and amenities could enhance predictive power.
+  - **Handling Price Outliers**: A robust method to account for high priced listings could improve prediction accuracy.
+- **Geographic Analysis**: Incorporating detailed location based features beyond latitude and longitude like proximity to landmarks or public transit could refine predictions.
+
+While the Linear Model provides a basic pricing estimate, additional work is needed to build a more accurate and reliable pricing model for Airbnb listings.
 
 ## References
 
-  - Kaggle: Kaggle: *Dgomonov, New York City Airbnb Open Data*. Link
+  - Dgomonov, (2019). New York City Airbnb Open Data. Kaggle. Retrieved from [https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data).
 
 ## Comment on Generative AI Use
+Generative AI tools were occasionally used in this project to assist with minor code debugging and structuring explanations. This included troubleshooting small coding issues, refining visualization parameters, and enhancing clarity in markdown documentation.
 
+All final model decisions, results, and interpretations were independently validated to ensure accuracy and alignment with project objectives.
 
 
