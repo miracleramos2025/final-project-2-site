@@ -1,10 +1,10 @@
 ---
-title: "Final Project"
+title: "Final Report"
 subtitle: |
   | Final Project 
   | Data Science 1 with R (STAT 301-2)
 author: "Miracle Ramos"
-pagetitle: "Final Project Miracle Ramos"
+pagetitle: "Final Report Miracle Ramos"
 date: today
 
 format:

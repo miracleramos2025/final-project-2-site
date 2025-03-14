@@ -9,8 +9,8 @@ This project aims to develop a predictive model for forecasting Airbnb rental pr
 - `models/` – Stores trained models and related outputs.
 - `results/` – Contains evaluation metrics and other results.
 - `memos/` – Stores project memos documenting progress and key decisions.
-- `Ramos_Miracle_final_project.qmd` – Main Quarto document for the final report.
-- `Ramos_Miracle_final_project.html` – Rendered HTML output of the final report.
+- `Ramos_Miracle_final_report.qmd` – Main Quarto document for the final report.
+- `Ramos_Miracle_final_report.html` – Rendered HTML output of the final report.
 - `Ramos_Miracle_executive_summary.qmd` – Quarto document for the executive summary.
 - `final-project-2-miracleramos2025.Rproj` – R project file for reproducibility.
 - `final_project_rubric.html` – Grading rubric for the project.
