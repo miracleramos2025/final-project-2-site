@@ -42,7 +42,7 @@ print(final_rsq)
 
 # Save final model performance
 final_model_performance <- data.frame(
-  Metric = c("RMSE", "MAE", "R-squared"),
+  Metric = c("RMSE", "MAE", "R²"),
   Value = c(final_rmse$.estimate, final_mae$.estimate, final_rsq$.estimate)
 )
 save(final_model_performance, file = here("results/final_model_performance.rda"))

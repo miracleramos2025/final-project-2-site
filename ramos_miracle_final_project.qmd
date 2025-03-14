@@ -122,13 +122,14 @@ library(readr)
 airbnb_data <- read_csv("data/AB_NYC_2019.csv")
 
 # Summarize price data
-price_summary <- airbnb_data %>% summarize(
-  mean_price = mean(price, na.rm = TRUE),
-  median_price = median(price, na.rm = TRUE),
-  max_price = max(price, na.rm = TRUE),
-  min_price = min(price, na.rm = TRUE),
-  std_dev = sd(price, na.rm = TRUE)
-)
+price_summary <- airbnb_data %>% 
+  summarize(
+    `Mean Price` = mean(price, na.rm = TRUE),
+    `Median Price` = median(price, na.rm = TRUE),
+    `Max Price` = max(price, na.rm = TRUE),
+    `Min Price` = min(price, na.rm = TRUE),
+    `Standard Deviation` = sd(price, na.rm = TRUE)
+  )
 
 # Display summary table
 kable(price_summary)
@@ -161,7 +162,17 @@ The distribution is highly **right-skewed**, with a small number of extremely hi
 #| echo: false
 
 missing_price <- sum(is.na(airbnb_data$price))
-kable(data.frame(Variable = "Price", Missing_Values = missing_price))
+
+# data frame with renamed columns
+missing_price_df <- data.frame(
+  `Variable` = "Price",
+  `Missing Values` = missing_price,
+  check.names = FALSE
+)
+
+# display table
+kable(missing_price_df)
+
 ```
 
 There are **no missing values** in the `price` variable, all listings have a recorded price. Since the target variable is complete, this will allow for more accurate modeling and analysis.
@@ -229,9 +240,7 @@ Model performance will be evaluated using **Root Mean Squared Error (RMSE)** bec
 
 #### Model Performance Summary
 
-Root Mean Squared Error (RMSE) was used to evaluate model performance and determine the best model for predicting Airbnb prices.
-
-The table below summarizes the RMSE values for each model:
+Root Mean Squared Error (RMSE) was used to evaluate model performance and determine the best model for predicting Airbnb prices. The table below summarizes the RMSE values for each model:
 ```{r}
 #| label: tbl-model-performance-summary
 #| tbl-cap: "Model Performance Summary"
@@ -252,7 +261,7 @@ model_performance_summary <- model_performance %>%
 kable(model_performance_summary)
 
 ```
-From @tbl-model-performance-summary, it is evident that the **Linear Model had the lowest RMSE (157.82), making it the best performing model**. The Random Forest model was the next best, while Elastic Net, KNN, and Boosted Trees performed worse than expected.
+From @tbl-model-performance-summary, it is evident that the **Linear Model had the lowest RMSE (157.8), making it the best performing model**. The Random Forest model was the next best, while Elastic Net, KNN, and Boosted Trees performed worse than expected.
 
 
 #### Tuning Parameter Analysis
@@ -304,6 +313,7 @@ After analyzing the model performances, the **Linear Model** was chosen as the f
 Yes and no. Initially, it was expected that Random Forest or Boosted Trees might perform best since they capture nonlinear relationships. However, since Airbnb pricing is influenced by structured factors like location, room type, and availability, a Linear Model’s assumptions may actually align well with the dataset. The poor performance of Boosted Trees was surprising but given the high learning rate issue and computational constraints, this result makes sense.
 
 ## Final Model Analysis
+Before evaluating the final model, it is important to note that RMSE values from cross-validation (157.82) and the test set (188.70) may differ. The cross-validation RMSE reflects performance on training data subsets and the test RMSE evaluates the model on completely unseen data. 
 
 #### Model Fit & Evaluation
 The final model was evaluated on the **test set**, with the following key performance metrics:
@@ -328,12 +338,12 @@ kable(final_model_performance)
 
   - **Root Mean Squared Error (RMSE = 188.70)**: The typical prediction error in Airbnb prices is $188.70.
   - **Mean Absolute Error (MAE = 69.38)**: On average, predictions are off by $69.38, making it a more interpretable error measure.
-  - **R-squared (0.134)**: The model explains only 13.4% of the variance in Airbnb prices. This suggests that other important factors like seasonality, amenities, and host behavior might be missing from our features.
+  - **R² (0.134)**: The model explains only 13.4% of the variance in Airbnb prices. This suggests that other important factors like seasonality, amenities, and host behavior might be missing from our features.
   
 ##### Target Variable & Transformations
 
   - The target variable, `price`, was log-transformed for some models, including Boosted Trees to help reduce the impact of extreme price outliers.
-  - The final Linear Model was trained on the untransformed price, meaning all predictions and evaluations are in actual dollar values.
+  - The final Linear Model was trained on the untransformed price. All predictions and evaluations are in actual dollar values.
   - While log transformation improved stability for tree-based models, the linear regression model performed best without it.
 
 #### Predicted Price vs. Actual Price Analysis
@@ -341,7 +351,7 @@ To visually assess model accuracy, the scatter plot below compares predicted and
 
 ```{r}
 #| label: fig-final-predictions
-#| fig-cap: "Predicted vs. Actual Prices"
+#| fig-cap: "Predicted vs. Actual Prices ($)"
 #| echo: false
 
 # load data
@@ -404,9 +414,9 @@ kable(error_summary)
 ```
 ##### Key Takeaways
 
-  - 25% of predictions are within $30.21 of the actual price.
-  - The median error is $69.38, meaning half of the listings are predicted within $69.38 of their true price.
-  - The 75th percentile error is $142.87. This shows that some listings have large errors, especially at higher price points.
+  - 25% of predictions are within $19.02 of the actual price.
+  - The median error is $69.38, meaning half of the listings are predicted within $43.64 of their true price.
+  - The 75th percentile error is $78.90 This shows that some listings have large errors, especially at higher price points.
   
 #### Limitations & Future Improvements
 
@@ -424,7 +434,7 @@ kable(error_summary)
 #### Final Reflection: Is This Model Useful?
 Although the Linear Model performed better than the Baseline Model, the reduction in error from an RMSE of 202.74 to 188.70 was relatively small. Given the high variability in price, the model may not be precise enough for individual pricing predictions but it could still provide a useful general pricing estimate.
 
-If the goal is interpretability, this model is useful as it clearly shows how factors like location and room type impact price. 
+In terms of interpretability, this model is useful as it clearly shows how factors like location and room type impact price. 
 
 ## Conclusion
 
@@ -447,8 +457,8 @@ While the Linear Model provides a basic pricing estimate, additional work is nee
   - Dgomonov, (2019). New York City Airbnb Open Data. Kaggle. Retrieved from [https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data](https://www.kaggle.com/datasets/dgomonov/new-york-city-airbnb-open-data).
 
 ## Comment on Generative AI Use
-Generative AI tools were occasionally used in this project to assist with minor code debugging and structuring explanations. This included troubleshooting small coding issues, refining visualization parameters, and enhancing clarity in markdown documentation.
+Generative AI tools were used occasionally in this project to help with minor code debugging and organizing explanations. This mainly included troubleshooting small coding issues, adjusting visualization settings, and making markdown documentation clearer.
 
-All final model decisions, results, and interpretations were independently validated to ensure accuracy and alignment with project objectives.
+All final model choices, results, and interpretations were reviewed and verified to make sure they were accurate and aligned with the project goals.
 
 
