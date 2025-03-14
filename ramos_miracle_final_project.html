@@ -3546,8 +3546,8 @@ Table 5: Tuned Model Parameters
 <h4 class="anchored" data-anchor-id="further-tuning-considerations">Further Tuning Considerations</h4>
 <p>While further tuning could be explored, there were computational and memory limitations that affected the extent of hyperparameter optimization:</p>
 <ul>
-<li><strong>Boosted Trees required significant memory and processing power</strong>. Due to system constraints, testing a finer grid for the learning rate (0.001–0.1 instead of 1.0023) was not feasible.</li>
-<li><strong>KNN performed moderately well</strong>, but the choice of 44 neighbors may indicate that a smaller or larger value could perform better. Testing in increments of 5 within 30–50 might have been useful.</li>
+<li><strong>Boosted Trees required significant memory and processing power</strong>. Due to system constraints, testing a finer grid for the learning rate (0.001 - 0.1 instead of 1.0023) was not feasible.</li>
+<li><strong>KNN performed moderately well</strong>, but the choice of 44 neighbors may indicate that a smaller or larger value could perform better. Testing in increments of 5 within 30 - 50 might have been useful.</li>
 <li><strong>Elastic Net leaned towards ridge regression</strong>, variable selection was less critical. Future analysis could test pure ridge regression to confirm.</li>
 </ul>
 <p>Given these challenges, future work could explore more efficient implementations. For example, optimized gradient boosting libraries that might yield better performance with lower memory requirements.</p>
@@ -3645,8 +3645,8 @@ Figure 3: Predicted vs. Actual Prices ($)
 <section id="observations-of-the-models-performance" class="level5">
 <h5 class="anchored" data-anchor-id="observations-of-the-models-performance">Observations of the Model’s Performance</h5>
 <ul>
-<li>The <strong>majority of points fall along the diagonal</strong> which suggests the model performs well for mid-range prices.</li>
-<li><strong>Expensive Airbnb listings</strong>, above $300-$400, <strong>tend to be underpredicted</strong>, indicating that the model struggles to capture premium features.</li>
+<li>The <strong>majority of points fall along the diagonal</strong> which suggests the model performs well for mid range prices.</li>
+<li><strong>Expensive Airbnb listings</strong>, above $300 - $400, <strong>tend to be underpredicted</strong>, indicating that the model struggles to capture premium features.</li>
 <li>The <strong>linear regression assumption may be limiting</strong> the model’s ability to predict nonlinear pricing trends such as surge pricing or special event demand.</li>
 </ul>
 </section>

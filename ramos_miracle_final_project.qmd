@@ -295,8 +295,8 @@ kable(tuned_models)
 #### Further Tuning Considerations
 While further tuning could be explored, there were computational and memory limitations that affected the extent of hyperparameter optimization:
 
-  - **Boosted Trees required significant memory and processing power**. Due to system constraints, testing a finer grid for the learning rate (0.001–0.1 instead of 1.0023) was not feasible.
-  - **KNN performed moderately well**, but the choice of 44 neighbors may indicate that a smaller or larger value could perform better. Testing in increments of 5 within 30–50 might have been useful.
+  - **Boosted Trees required significant memory and processing power**. Due to system constraints, testing a finer grid for the learning rate (0.001 - 0.1 instead of 1.0023) was not feasible.
+  - **KNN performed moderately well**, but the choice of 44 neighbors may indicate that a smaller or larger value could perform better. Testing in increments of 5 within 30 - 50 might have been useful.
   - **Elastic Net leaned towards ridge regression**, variable selection was less critical. Future analysis could test pure ridge regression to confirm.
 
 Given these challenges, future work could explore more efficient implementations. For example, optimized gradient boosting libraries that might yield better performance with lower memory requirements.
@@ -375,8 +375,8 @@ ggplot(final_preds_clean, aes(x = .pred, y = price)) +
 ```
 ##### Observations of the Model’s Performance
 
-  - The **majority of points fall along the diagonal** which suggests the model performs well for mid-range prices.
-  - **Expensive Airbnb listings**, above $300-$400, **tend to be underpredicted**, indicating that the model struggles to capture premium features.
+  - The **majority of points fall along the diagonal** which suggests the model performs well for mid range prices.
+  - **Expensive Airbnb listings**, above $300 - $400, **tend to be underpredicted**, indicating that the model struggles to capture premium features.
   - The **linear regression assumption may be limiting** the model’s ability to predict nonlinear pricing trends such as surge pricing or special event demand.
 
 
