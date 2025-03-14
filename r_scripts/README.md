@@ -37,8 +37,8 @@ This folder contains all R scripts used for data preprocessing, feature engineer
 ## **Usage**
 1. Run `1_initial_split.R` to split the data.
 2. Execute feature engineering scripts (`2_recipe*` and `3_recipe*`).
-3. Train models using the `4_fit_*` scripts.
-4. Tune hyperparameters with `5_tune_*` scripts.
+3. Tune hyperparameters with `5_tune_*` scripts.
+4. Train models using the `4_fit_*` scripts.
 5. Compare models using `6_model_analysis.R`.
 6. Train the final model with `7_train_final_model.R`.
 7. Evaluate final model performance using `8_assess_final_model.R`.
